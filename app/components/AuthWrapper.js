@@ -12,7 +12,7 @@ export const withAuthAndPermission = (PageComponent, permissions) => {
     useEffect(() => {
 
       // Redirect to login page if user is not authenticated
-      if (!token) {
+      if (!token || token === 'undefined') {
         setLoading(false);
         router.push('/login');
         return;

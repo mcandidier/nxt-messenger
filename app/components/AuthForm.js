@@ -17,6 +17,7 @@ import API from "../API";
 function AuthForm({isLogin}) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const [passwordError, setPasswordError] = useState('');
 
   const linkTo = (path) => {
     router.push(path);
@@ -42,6 +43,7 @@ function AuthForm({isLogin}) {
   const {
     register,
     handleSubmit,
+    setError,
     formState: {
       errors
     }
@@ -52,17 +54,32 @@ function AuthForm({isLogin}) {
   const onSubmit = async (data) => {
     // setIsLoading(true);
     console.log('submit');
-    const url = isLogin ? 'accounts/login/': 'accounts/register';
+    const url = isLogin ? 'accounts/login/': 'register/';
     try {
       const response = await API.post(url, data);
       const {key} = await response.data;
-      setCookie(null, 'token', key, {
-        maxAge: 30 * 24 * 60 * 60, // 30 days
-        path: '/',
-      });
+
+      if(key) {
+        setCookie(null, 'token', key, {
+          maxAge: 30 * 24 * 60 * 60, // 30 days
+          path: '/',
+        });
+      }
+
       router.push('/');
     } catch(error) {
-      toast.error('Something went wrong.');
+      const {data} = error.response;
+      if(isLogin) {
+        setPasswordError('Invalid username or password.');
+      } else {
+        Object.keys(data).map(fieldName => {
+          setError(fieldName, {
+              type: 'manual',
+              message: data[fieldName],
+          });
+        });
+      }
+    
     }
   }
   return (
@@ -81,6 +98,8 @@ function AuthForm({isLogin}) {
               type={fieldName === 'password'? 'password': 'text'}
             />
           ))}
+          {passwordError && <span className="text-sm mt-0.5 text-rose-800 block">{passwordError}</span>}
+
           <Button
             fullWidth
             type='submit'
