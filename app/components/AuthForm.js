@@ -1,18 +1,44 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm, useFormContext } from 'react-hook-form';
 
 import InputWithErrors from "./input";
 import Button from "./button";
 import { BsGithub, BsGoogle } from 'react-icons/bs';
-
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 import SocialButton from "./SocialButton";
+import { setCookie } from 'nookies';
+import API from "../API";
 
 
-function AuthForm() {
+function AuthForm({isLogin}) {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const linkTo = (path) => {
+    router.push(path);
+  }
+
+
+  const fieldss  = useMemo(() => {
+    if(isLogin) {
+      return {
+        email: '',
+        password: '',
+      }
+    } else {
+      return {
+        name: '',
+        email: '',
+        password: '',
+      }
+    }
+  }, [isLogin])
+
+ 
   const {
     register,
     handleSubmit,
@@ -20,44 +46,46 @@ function AuthForm() {
       errors
     }
   } = useForm({
-    defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-    }
+    defaultValues: fieldss
   })
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // setIsLoading(true);
-    console.log('submit')
-
-    console.log('error', errors)
+    console.log('submit');
+    const url = isLogin ? 'accounts/login/': 'accounts/register';
+    try {
+      const response = await API.post(url, data);
+      const {key} = await response.data;
+      setCookie(null, 'token', key, {
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+        path: '/',
+      });
+      router.push('/');
+    } catch(error) {
+      toast.error('Something went wrong.');
+    }
   }
   return (
-    <div>
+    <div className="mt-5">
       <form 
         className="space-y-5"
         onSubmit={handleSubmit(onSubmit)}>
-        <InputWithErrors 
-            name='email' 
-            label='Email' 
-            required
-            errors={errors}
-            register={register}/>
-
-        <InputWithErrors 
-            name='password' 
-            label='Password'
-            required
-            errors={errors}
-            register={register}/>
-
+          {Object.keys(fieldss).map((fieldName) => (
+            <InputWithErrors
+              key={fieldName}
+              label={fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
+              name={fieldName}
+              register={register}
+              errors={errors}
+              required
+              type={fieldName === 'password'? 'password': 'text'}
+            />
+          ))}
           <Button
             fullWidth
             type='submit'
-          >Sign in</Button>
+          >{isLogin ? 'Login': 'Register'}</Button>
       </form>
-
 
       <div className="mt-6">
         <div className="relative">
@@ -80,17 +108,19 @@ function AuthForm() {
           </div>
         </div>
 
-        <div className="flex mt-5  gap-3 justify-center">
+        <div className="flex mt-5 gap-2 justify-center">
             <SocialButton icon={<BsGithub/>} onClick={() => {}}/>
             <SocialButton icon={<BsGoogle/>} onClick={() => {}}/>
           </div>
       </div>
 
       <div className="flex mt-5 gap-3 justify-center">
-        <div>
-          <p>New to Messenger? <span className="underline text-sky-700 cursor-pointer">
-          Create an Account</span> </p>
-        </div>
+          <p
+          >{isLogin ? 'New to Messenger?': 'Already have an account?'}
+            <span className="underline text-sky-700 ml-2 cursor-pointer"
+              onClick={() => {linkTo(isLogin? 'register':'login' )}}
+            >
+          {isLogin ? 'Create an Account': 'Login here'}</span> </p>
       </div>
     </div>
   )

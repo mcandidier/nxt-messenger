@@ -1,13 +1,13 @@
 import React from 'react';
 
-const InputWithErrors = ({ label, name, value, onChange, register, errors, required }) => {
+const InputWithErrors = ({ label, name, value, onChange, register, errors, required, type }) => {
   return (
     <div className="mb-4">
       <label htmlFor={name} className="block text-gray-700 text-sm mb-1 font-semibold">
         {label}
       </label>
       <input
-        type="text"
+        type={type}
         id={name}
         name={name}
         value={value}
