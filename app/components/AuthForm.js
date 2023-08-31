@@ -19,6 +19,7 @@ function AuthForm({isLogin}) {
   const router = useRouter();
   const [passwordError, setPasswordError] = useState('');
 
+
   const linkTo = (path) => {
     router.push(path);
   }
@@ -54,21 +55,24 @@ function AuthForm({isLogin}) {
   const onSubmit = async (data) => {
     // setIsLoading(true);
     console.log('submit');
-    const url = isLogin ? 'accounts/login/': 'register/';
+    const url = isLogin ? 'accounts/login/': 'accounts/register/';
     try {
       const response = await API.post(url, data);
-      const {key} = await response.data;
+      const {token} = await response.data;
 
-      if(key) {
-        setCookie(null, 'token', key, {
+      if(token) {
+        setCookie(null, 'token', token, {
           maxAge: 30 * 24 * 60 * 60, // 30 days
           path: '/',
         });
+        router.push('/');
+      } else {
+        toast.success('Account successfully created.')
+        router.push('/login');
       }
-
-      router.push('/');
     } catch(error) {
-      const {data} = error.response;
+    console.log('error', error)
+      const data = error.response;
       if(isLogin) {
         setPasswordError('Invalid username or password.');
       } else {

@@ -5,11 +5,8 @@ import { withAuthAndPermission } from '@/app/components/AuthWrapper';
 
 function Home() {
     return (
-      <div>
-        Home
-      </div>
+    <div>Home</div>
     )
   }
   
-
-export default withAuthAndPermission(Home, ['home']);
+export default Home

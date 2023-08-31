@@ -1,3 +1,5 @@
+'use client'
+
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { parseCookies } from 'nookies';
@@ -14,9 +16,11 @@ export const withAuthAndPermission = (PageComponent, permissions) => {
       // Redirect to login page if user is not authenticated
       if (!token || token === 'undefined') {
         setLoading(false);
+        console.log('test')
         router.push('/login');
         return;
       } else {
+        console.log('llgin')
         setLoading(false)
       }
 

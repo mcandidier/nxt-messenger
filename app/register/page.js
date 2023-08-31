@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import Image from 'next/image'
 import AuthForm from '@/app/components/AuthForm'
@@ -22,7 +24,7 @@ function page() {
          Create your account
       </h2>
       <AuthForm isLogin={false}></AuthForm>
-    </div> 
+    </div>
     </div>
   )
 }
