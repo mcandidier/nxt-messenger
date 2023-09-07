@@ -1,6 +1,6 @@
 import React from 'react';
 
-const InputWithErrors = ({ label, name, value, onChange, register, errors, required, type }) => {
+const InputWithErrors = ({ placeholder, label, name, value, onChange, register, errors, required, type }) => {
   return (
     <div className="mb-4">
       <label htmlFor={name} className="block text-gray-700 text-sm mb-1 font-semibold">
@@ -11,7 +11,7 @@ const InputWithErrors = ({ label, name, value, onChange, register, errors, requi
         id={name}
         name={name}
         value={value}
-        placeholder={label}
+        placeholder={placeholder ? placeholder: label}
         onChange={onChange}
         {...register(name, {
             required: 'This field is required'

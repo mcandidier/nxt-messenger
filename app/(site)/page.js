@@ -1,12 +1,12 @@
-import Image from 'next/image';
-import { Toaster } from 'react-hot-toast';
-
-import { withAuthAndPermission } from '@/app/components/AuthWrapper';
+import React from 'react';
 
 function Home() {
-    return (
-    <div>Home</div>
-    )
-  }
-  
+
+  return (
+
+  <div>Home</div>
+  )
+}
+
+
 export default Home

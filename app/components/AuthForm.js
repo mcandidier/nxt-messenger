@@ -65,7 +65,7 @@ function AuthForm({isLogin}) {
           maxAge: 30 * 24 * 60 * 60, // 30 days
           path: '/',
         });
-        router.push('/');
+        router.push('/messages');
       } else {
         toast.success('Account successfully created.')
         router.push('/login');

@@ -16,11 +16,15 @@ function Avatar({user}) {
         md:h-8
         md:w-8
       ">
-        <Image
-          fill
-          src={user?.image || '/images/placeholder.jpg'}
-          alt="Avatar"
-        />
+
+        <div className='flex'>
+          <Image
+            fill
+            src={user?.image || '/images/placeholder.jpg'}
+            alt="Avatar"
+          />
+          {user}
+        </div>
       </div>
     </div>
   )
