@@ -7,10 +7,13 @@ import API from '../API';
 
 import { HiPaperAirplane, HiPhoto } from 'react-icons/hi2';
 import MessageInput from './MessageInput';
+import { useConversationMessages } from '../hooks/useConversations';
 
 
 function Form({params}) {
   const {messageId} = params;
+
+  const {data: messages, mutate: mutatedData} = useConversationMessages(messageId);
   const {register, handleSubmit, setError, formState: {
     errors
   }, reset} = useForm({
@@ -20,11 +23,11 @@ function Form({params}) {
   })
 
   const onSubmit = async (data) => {
-    console.log(data);
     reset()
-    // todo send to API
     const resp = await API.post(`conversations/${messageId}/messages/`, data);
-    console.log(await resp.data, 'posted');
+    if(resp.status === 201) {
+      mutatedData();
+    } 
   }
 
   return (
