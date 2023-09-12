@@ -42,11 +42,10 @@ function MessageList() {
 
           {!isLoading && currentUser && (
              conversations.map((message, key) => {
-              return <Message key={key} message={message} currentUser={currentUser} onClick={()=> console.log('aa')}/>
+              return <Message key={key} message={message} currentUser={currentUser}/>
             })
           )
           } 
-
         </div>
   </div>
   )

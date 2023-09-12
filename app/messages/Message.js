@@ -31,6 +31,7 @@ function Message({message, currentUser}) {
   const [pusher, setPusher] = useState(null)
 
   useEffect(() => {
+    console.log('testing pusher')
     if(!pusher && currentUser) {
       const newPusher = new Pusher(
         process.env.NEXT_PUBLIC_PUSHER_KEY, {
@@ -39,7 +40,7 @@ function Message({message, currentUser}) {
       )
       // Listen for the connected event
       newPusher.connection.bind('connected', () => {
-        // console.log('Pusher connected successfully');
+        console.log('Pusher connected successfully');
       });
 
       newPusher.connection.bind('error', (err) => {
@@ -67,7 +68,6 @@ function Message({message, currentUser}) {
         console.log(conversation_id, 'channel created');
       });
     }
-
   },[]);
   
 
@@ -76,7 +76,6 @@ function Message({message, currentUser}) {
   const {data: user} = useGetUser(userId);
   
   return (
-
     <div className={`cursor-ponter flex items-center gap-2 p-3 mb-2 rounded-lg hover:bg-neutral-50 ${clsx({'bg-neutral-100': selected})} ease-in-out transition`}
      onClick={handleClick}>
       <Avatar pk={userId}></Avatar>
