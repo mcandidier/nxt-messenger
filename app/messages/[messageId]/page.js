@@ -1,19 +1,11 @@
 import React from 'react'
-import Header from '../Header'
-import Body from '../Body'
-import Form from '../Form'
 
-
+import Convo from './convo'
 
 async function  Message({params}) {
-
   return (
     <div className='lg:pl-80 h-full'>
-      <div className='h-full flex flex-col'>
-        <Header></Header>
-        <Body params={params}/>
-        <Form params={params}></Form>
-      </div>
+        <Convo params={params}/>
     </div>
   )
 }

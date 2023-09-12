@@ -3,7 +3,7 @@
 import React from 'react'
 import Avatar from '../components/Avatar';
 
-function Header() {
+function Header({header}) {
   return (
     <div className='
     bg-white 
@@ -20,7 +20,7 @@ function Header() {
       <div className='flex items-center justify-between'>
          <Avatar/>
          <div className='flex px-2'>
-          test name
+          {header}
         </div>
       </div>
       <div className='flex items-end'>

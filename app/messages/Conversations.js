@@ -8,11 +8,14 @@ import { useConversationsHook } from '../hooks/useConversations'
 
 
 import Loading from './loading'
+import { useUserHook } from '../hooks/useUser'
 
 function MessageList() {
 
   const[ loading, setLoading] = useState(true);
   const {data: conversations, isLoading} = useConversationsHook();
+
+  const {data: currentUser} = useUserHook();
 
   return (
     <div className='
@@ -37,9 +40,9 @@ function MessageList() {
           )
           }
 
-          {!isLoading && (
-             conversations.map((message,key) => {
-              return <Message key={key} message={message} onClick={()=> console.log('aa')}/>
+          {!isLoading && currentUser && (
+             conversations.map((message, key) => {
+              return <Message key={key} message={message} currentUser={currentUser} onClick={()=> console.log('aa')}/>
             })
           )
           } 

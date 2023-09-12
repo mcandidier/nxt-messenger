@@ -1,22 +1,24 @@
 'use client'
 
-import React, {useMemo, useState, useContext, useEffect} from 'react';
+import React, {useMemo, useState, useEffect} from 'react';
 
 import { useRouter } from 'next/navigation';
 import Avatar from '../components/Avatar';
 import clsx from 'clsx';
 import { useParams } from 'next/navigation';
-import { AuthContext } from '../context/AuthContext';
+
+import _ from 'lodash';
 
 import Pusher from 'pusher-js';
+import { AuthContext } from '../context/AuthContext';
+import { useGetUser } from '../hooks/useUser';
 
 
-function Message({message}) {
+function Message({message, currentUser}) {
 
   const router = useRouter();
   const params = useParams()
   const { messageId } = params;
-  const { currentUser} = useContext(AuthContext);
 
   const selected = useMemo(() => {
     const isSelected = parseInt(messageId) === parseInt(message.id);
@@ -24,7 +26,6 @@ function Message({message}) {
   }, [messageId]);
 
   const handleClick = (e) => {
-    console.log('handle click');
     router.push(`/messages/${message.id}`);
   }
   const [pusher, setPusher] = useState(null)
@@ -68,14 +69,25 @@ function Message({message}) {
     }
 
   },[]);
+  
 
+  const receiverId = _.find(message.participants, participant => participant !== message.owner);
+  console.log(receiverId, 'test')
+  console.log('currentUser', currentUser);
 
+  const userId = currentUser.id === receiverId ? message.owner : receiverId;
+
+  console.log(userId, 'userId')
+  const {data: user} = useGetUser(userId);
+  
   return (
-    <div className={`cursor-ponter flex items-center gap-2 p-3 mb-2 rounded-lg hover:bg-neutral-50 ${clsx({'bg-neutral-100': selected})} ease-in-out transition`} onClick={handleClick}>
-      <Avatar></Avatar>
+
+    <div className={`cursor-ponter flex items-center gap-2 p-3 mb-2 rounded-lg hover:bg-neutral-50 ${clsx({'bg-neutral-100': selected})} ease-in-out transition`}
+     onClick={handleClick}>
+      <Avatar pk={userId}></Avatar>
       <div
         className='cursor-pointer'
-      >{message.content}
+      >{user?.username}
       </div>
     </div>
   )

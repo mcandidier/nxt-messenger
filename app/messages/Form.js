@@ -10,10 +10,9 @@ import MessageInput from './MessageInput';
 import { useConversationMessages } from '../hooks/useConversations';
 
 
-function Form({params}) {
+function Form({params, setMessages, messages}) {
   const {messageId} = params;
 
-  const {data: messages, mutate: mutatedData} = useConversationMessages(messageId);
   const {register, handleSubmit, setError, formState: {
     errors
   }, reset} = useForm({
@@ -26,9 +25,10 @@ function Form({params}) {
     reset()
     const resp = await API.post(`conversations/${messageId}/messages/`, data);
     if(resp.status === 201) {
-      mutatedData();
+      setMessages([...messages, resp.data])
     } 
   }
+
 
   return (
     <div className='py-4 px-4 bg-white border-t flex items-center gap-2 w-full'>

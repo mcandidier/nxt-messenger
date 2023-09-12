@@ -10,7 +10,8 @@ export const AuthContext = createContext();
 export default function AuthContextProvider({children}) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  
+  const [loading, setLoading] = useState(true);
+
   const router = useRouter();
   const cookies = parseCookies();
   const token = cookies.token;
@@ -25,13 +26,13 @@ export default function AuthContextProvider({children}) {
     const fetchData = async() => {
       try {
         const data = await getUser();
-        console.log('data', data)
+        console.log('data>>', data)
         setCurrentUser(data);
+        setLoading(false)
       } catch (error) {
         console.log(error)
       }
     }
-
 
     if (!token || token === 'undefined') {
       router.push('/login');
@@ -40,11 +41,13 @@ export default function AuthContextProvider({children}) {
       fetchData();
       setIsAuthenticated(true)
     }
-  }, [token, router]);
+  }, [token, router, loading]);
+
 
   return(
-    <AuthContext.Provider value={{isAuthenticated, setIsAuthenticated, currentUser}}>
-      {children}
-    </AuthContext.Provider>
+      <AuthContext.Provider value={{isAuthenticated, setIsAuthenticated, currentUser}}>
+        {children}
+      </AuthContext.Provider>
+
   )
 }
