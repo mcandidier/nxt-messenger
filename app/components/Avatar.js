@@ -23,7 +23,7 @@ function Avatar({pk, fromMessage}) {
       <div className="relative flex justify-center gap-2 items-center mb-1">
       {fromMessage && user?.id === currentUser?.id && (
         <div className='flex'>
-          {user.username}
+          {user.name}
         </div>
       )}
       <div className="
@@ -53,7 +53,7 @@ function Avatar({pk, fromMessage}) {
       </div>
       {fromMessage && user?.id !== currentUser?.id && (
         <div className='flex'>
-          {user.username}
+          {user.name}
         </div>
       )}
     </div>

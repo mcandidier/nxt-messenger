@@ -25,6 +25,7 @@ function AuthForm({isLogin}) {
   }
 
 
+
   const fieldss  = useMemo(() => {
     if(isLogin) {
       return {
@@ -52,6 +53,9 @@ function AuthForm({isLogin}) {
     defaultValues: fieldss
   })
 
+
+  console.log(errors, 'errors')
+
   const onSubmit = async (data) => {
     // setIsLoading(true);
     console.log('submit');
@@ -72,10 +76,11 @@ function AuthForm({isLogin}) {
       }
     } catch(error) {
     console.log('error', error)
-      const data = error.response;
       if(isLogin) {
         setPasswordError('Invalid username or password.');
       } else {
+        const response = error.response;
+        const data = response.data;
         Object.keys(data).map(fieldName => {
           setError(fieldName, {
               type: 'manual',

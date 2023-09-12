@@ -72,12 +72,7 @@ function Message({message, currentUser}) {
   
 
   const receiverId = _.find(message.participants, participant => participant !== message.owner);
-  console.log(receiverId, 'test')
-  console.log('currentUser', currentUser);
-
   const userId = currentUser.id === receiverId ? message.owner : receiverId;
-
-  console.log(userId, 'userId')
   const {data: user} = useGetUser(userId);
   
   return (
@@ -87,7 +82,7 @@ function Message({message, currentUser}) {
       <Avatar pk={userId}></Avatar>
       <div
         className='cursor-pointer'
-      >{user?.username}
+      >{user?.name}
       </div>
     </div>
   )
