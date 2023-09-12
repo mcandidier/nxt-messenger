@@ -28,48 +28,7 @@ function Message({message, currentUser}) {
   const handleClick = (e) => {
     router.push(`/messages/${message.id}`);
   }
-  const [pusher, setPusher] = useState(null)
-
-  useEffect(() => {
-    console.log('testing pusher')
-    if(!pusher && currentUser) {
-      const newPusher = new Pusher(
-        process.env.NEXT_PUBLIC_PUSHER_KEY, {
-          cluster: 'ap1'
-        }
-      )
-      // Listen for the connected event
-      newPusher.connection.bind('connected', () => {
-        console.log('Pusher connected successfully');
-      });
-
-      newPusher.connection.bind('error', (err) => {
-        console.error('Pusher connection error:', err);
-      });
-
-      // Listen for disconnection event
-      newPusher.connection.bind('disconnected', () => {
-          console.warn('Pusher disconnected');
-      });
-    
-      const channelName = `${currentUser.id}-conversations`;
-      const channel = newPusher.subscribe(channelName);
-      
-      channel.bind('new-message', function(data) {
-        // Update the chat interface with the new message
-        const message = data.message;
-        const sender = data.sender;
-        console.log(message, sender);
-        // Add the message to the chat window
-      });
-
-      channel.bind('new-channel', function(data) {
-        const conversation_id = data.conversation_id;
-        console.log(conversation_id, 'channel created');
-      });
-    }
-  },[]);
-  
+ 
 
   const receiverId = _.find(message.participants, participant => participant !== message.owner);
   const userId = currentUser.id === receiverId ? message.owner : receiverId;

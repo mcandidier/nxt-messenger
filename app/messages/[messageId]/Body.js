@@ -1,22 +1,43 @@
 'use client';
 
 
-import React, { useContext } from 'react'
-import Avatar from '../../components/Avatar'
-import Pusher from 'pusher-js'
-import { useConversationMessages } from '@/app/hooks/useConversations'
+import React, { useContext, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+
 import clsx from 'clsx';
+import Pusher from 'pusher-js'
+import _ from 'lodash'
+
+import { useConversationMessages } from '@/app/hooks/useConversations'
 import { AuthContext } from '../../context/AuthContext';
 import { useUserHook } from '../../hooks/useUser';
+
 import Header from '../Header';
 import Loading from './loader';
-
+import Avatar from '../../components/Avatar'
 import EmpytState from '@/app/components/EmpytState';
 
 
-function Body({messages, setHeader, loading}) {
+function Body({params, messages, setMessages, loading }) {
   const { data: currentUser} = useUserHook();
+  const {messageId} = params;
 
+  const newMessages = useSelector((state) => state.notifications);
+  
+  useEffect(() => {
+    const foundObjects = _.filter(newMessages, { conversation: Number(messageId) });
+
+    console.log(foundObjects, 'foundObjects')
+    foundObjects.map((message) => {
+      Object.preventExtensions(message);
+
+      // Clone the object and add a new property
+      const clonedObject = { ...message, isSame: true };
+      setMessages([...messages, clonedObject]);
+    });
+  
+  }, [newMessages]);
+  
   let nxtElem = null;
 
   return (
@@ -29,10 +50,11 @@ function Body({messages, setHeader, loading}) {
           const isSender = message.sender === currentUser.id;
           if (index < array.length - 1) {
             nxtElem = array[index + 1];
-            if(message.sender === nxtElem.sender) {
-              nxtElem['isSame'] = true;
+            
+            if(message.sender === nxtElem.sender && nxtElem) {
+              nxtElem.isSame = true;
             } else {
-              nxtElem['isSame'] = false
+              nxtElem.isSame = false
             }
           }
   

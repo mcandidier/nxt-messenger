@@ -10,7 +10,7 @@ import { useConversationsHook } from '../hooks/useConversations'
 import Loading from './loader'
 import { useUserHook } from '../hooks/useUser'
 
-function MessageList() {
+function Conversations() {
 
   const[ loading, setLoading] = useState(true);
   const {data: conversations, isLoading} = useConversationsHook();
@@ -51,4 +51,4 @@ function MessageList() {
   )
 }
 
-export default MessageList
+export default Conversations

@@ -23,10 +23,10 @@ export default function AuthContextProvider({children}) {
   }
 
   useEffect(()=> {
+    console.log('provider')
     const fetchData = async() => {
       try {
         const data = await getUser();
-        console.log('data>>', data)
         setCurrentUser(data);
         setLoading(false)
       } catch (error) {
@@ -41,7 +41,7 @@ export default function AuthContextProvider({children}) {
       fetchData();
       setIsAuthenticated(true)
     }
-  }, [token, router, loading]);
+  }, []);
 
 
   return(
