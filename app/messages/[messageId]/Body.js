@@ -9,14 +9,12 @@ import clsx from 'clsx';
 import { AuthContext } from '../../context/AuthContext';
 import { useUserHook } from '../../hooks/useUser';
 import Header from '../Header';
-import Loading from './loading';
+import Loading from './loader';
 
 import EmpytState from '@/app/components/EmpytState';
 
 
 function Body({messages, setHeader, loading}) {
-  // const { messageId } = params;
-  // const {data: messages, isLoading} = useConversationMessages(messageId);
   const { data: currentUser} = useUserHook();
 
   let nxtElem = null;
@@ -24,16 +22,9 @@ function Body({messages, setHeader, loading}) {
   return (
     <>
       <Header header={messages?.title}></Header>
-
-      {loading && (
-        <div className='flex-1 overflow-y-auto px-6 py-4'>
-          <Loading></Loading>
-        </div>
-      )}
-
-
+      <div className='flex-1 overflow-y-auto px-6 py-4'>
       {!loading && messages && (
-        <div className='flex-1 overflow-y-auto px-6 py-4'>
+       <>
         {messages?.map((message, index, array) => {
           const isSender = message.sender === currentUser.id;
           if (index < array.length - 1) {
@@ -62,11 +53,11 @@ function Body({messages, setHeader, loading}) {
             <EmpytState />
           )}
         })
-        }
-      </div>
+        } 
+      </>
       )}
-    </>
-
+      </div>
+  </>
   )
 }
 

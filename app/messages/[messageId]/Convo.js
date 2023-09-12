@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import { useConversationMessages } from '@/app/hooks/useConversations'
 import Form from '../Form'
 import API from '@/app/API';
 
 import Body from './Body';
 import { random } from 'lodash';
+import Loading from './loader';
 
 function Convo({params}) {
   const { messageId } = params;
@@ -15,14 +16,19 @@ function Convo({params}) {
   const [loading, setLoading ] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
 
     const fetchData = async () => {
+      setLoading(true);
       const url =  `conversations/${messageId}/messages/`;
       const resp =  await API.get(url);
       const data = await resp.data;
       setMessages(data);
-      setTimeout(() => {setLoading(false)}, random(2000))
+      
+      if(resp.status === 200) {
+        setTimeout(() => {
+          setLoading(false)
+        }, 2000);
+      }
     }
 
     fetchData();
@@ -31,6 +37,10 @@ function Convo({params}) {
       setLoading(false)
     }
   }, []);
+
+  if(loading) {
+    return <Loading/>
+  }
 
   return (
     <div className='h-full flex flex-col'>

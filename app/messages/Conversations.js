@@ -7,7 +7,7 @@ import { AuthContext } from '../context/AuthContext'
 import { useConversationsHook } from '../hooks/useConversations'
 
 
-import Loading from './loading'
+import Loading from './loader'
 import { useUserHook } from '../hooks/useUser'
 
 function MessageList() {
