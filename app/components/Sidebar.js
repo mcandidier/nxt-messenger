@@ -39,22 +39,29 @@ function Sidebar({children}) {
     
       const channelName = `${user.id}-conversations`;
       const channel = newPusher.subscribe(channelName);
-      
+
       channel.bind('new-message', function(data) {
         // Update the chat interface with the new message
         console.log(data, 'message')
         const message = data.message;
         const sender = data.sender;
-        console.log(message, sender);
         // Add the message to the chat window
         dispatch(createNotification(data));
       });
 
       channel.bind('new-channel', function(data) {
         const conversation_id = data.conversation_id;
-        console.log(conversation_id, 'channel created');
       });
+
       setPusher(newPusher);
+    }
+
+    return () => {
+      if(pusher) {
+        pusher.unsubscribe(user.id);
+        pusher.unbind('new-message');
+        pusher.unbind('new-channel');
+      }
     }
   }, [user]);
 

@@ -20,8 +20,11 @@ export default function Providers({ children }) {
   }
 
   useEffect(() => {
-    getUser();
-  }, [])
+    if(token) {
+      // todo: check token if valid then request user.
+      getUser();
+    }
+  }, []);
 
 
 

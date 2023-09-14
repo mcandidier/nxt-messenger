@@ -5,6 +5,7 @@ import AuthContextProvider from './context/AuthContext';
 
 
 import Providers from './redux/provider';
+import { Toaster } from 'react-hot-toast';
 
 
 export default function RootLayout({
@@ -14,6 +15,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
           <AuthContextProvider>
+            <Toaster/>
             <Providers>
               {children}
             </Providers>

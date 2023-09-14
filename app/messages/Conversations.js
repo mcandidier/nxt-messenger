@@ -9,13 +9,20 @@ import { useConversationsHook } from '../hooks/useConversations'
 
 import Loading from './loader'
 import { useUserHook } from '../hooks/useUser'
+import { useSelector } from 'react-redux'
 
 function Conversations() {
 
   const[ loading, setLoading] = useState(true);
   const {data: conversations, isLoading} = useConversationsHook();
 
-  const {data: currentUser} = useUserHook();
+  const currentUser = useSelector((state) => state.user)
+
+  const newMessages = useSelector((state) => state.notifications);
+
+  useEffect(() => {
+
+  }, [newMessages]);
 
   return (
     <div className='
@@ -41,8 +48,18 @@ function Conversations() {
           }
 
           {!isLoading && currentUser && (
-             conversations.map((message, key) => {
-              return <Message key={key} message={message} currentUser={currentUser}/>
+             conversations.map((message) => {
+              Object.preventExtensions(message);
+              let msgObj = { ...message, hasNew: false };
+
+              const foundObjects = _.find(newMessages, { conversation: Number(message.id) });
+
+              if(foundObjects) {
+                Object.preventExtensions(message);
+                msgObj= { ...message, hasNew: true };
+              }
+
+              return <Message key={message.id} message={msgObj} currentUser={currentUser}/>
             })
           )
           } 
