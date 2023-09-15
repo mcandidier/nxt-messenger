@@ -82,10 +82,12 @@ function Body({params, messages, setMessages, loading }) {
     setNewMessage(newMsg);
     if(newMsg && !newMessages.length) {
       const url = `conversations/${newMsg.conversation}/messages/${newMsg.id}/seen/`;
+      if(newMsg.sender !== currentUser.id ) {
 
-      // API.put(url).then(resp => {
-      //   console.log(resp.data, 'refresh');
-      // });
+        API.put(url).then(resp => {
+          console.log(resp.data, 'refresh');
+        });
+      }
     }
 
     return () => {
@@ -139,7 +141,6 @@ function Body({params, messages, setMessages, loading }) {
                   isSender? 'text-white': 'text-neutral-800' )}
                 >{message.content}</p>
               </div>
-
 
               {newMessage?.id  === message.id && (
                 <div className='flex'>

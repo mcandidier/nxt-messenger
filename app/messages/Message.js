@@ -8,33 +8,28 @@ import clsx from 'clsx';
 import { useParams } from 'next/navigation';
 
 import _ from 'lodash';
+import format from 'date-fns/format';
+
 
 import Pusher from 'pusher-js';
 import { AuthContext } from '../context/AuthContext';
 import { useGetUser } from '../hooks/useUser';
-import format from 'date-fns/format';
+
+import { useConversation } from '../hooks/useConversations';
 
 function Message({message, currentUser}) {
 
   const router = useRouter();
-  const params = useParams()
-  const { messageId } = params;
-
-  const selected = useMemo(() => {
-    const isSelected = parseInt(messageId) === parseInt(message.id);
-    return isSelected;
-  }, [messageId]);
+  const { conversationId, isSelected } = useConversation();
 
   const handleClick = (e) => {
     router.push(`/messages/${message.id}`);
   }
  
-
   const receiverId = _.find(message.participants, participant => participant !== message.owner);
   const userId = currentUser.id === receiverId ? message.owner : receiverId;
   const {data: user} = useGetUser(userId);
   
-  // const timestamp = format(message.timestamp)
   return (
     <div className={clsx(`
       cursor-ponter
@@ -47,14 +42,13 @@ function Message({message, currentUser}) {
       ease-in-out
       transition
     `,
-    selected ? 'bg-neutral-100': '',
+    isSelected ? 'bg-neutral-100': '',
     )}
     onClick={handleClick}>
       <Avatar pk={userId}></Avatar>
       <div className='min-w-0 flex-1'>
       <div  
         className='flex justify-between items-center cursor-pointer'>
-    
           <p className={`text-md font-sm text-black ${message.hasNew && 'font-bold'}`}>{user?.name}</p>
         { true && (
           <p className='text-xs font-light text-gray-400'>{format(new Date(message.timestamp), 'p')}</p>

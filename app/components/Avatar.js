@@ -7,6 +7,7 @@ import { useGetUser, useUserHook } from '../hooks/useUser'
 import { Loader } from 'lucide-react'
 
 function Avatar({pk, fromMessage}) {
+  
   const {data: user, error, isLoading} = useGetUser(pk)
   const {data: currentUser, isLoading: currentUserLoading} = useUserHook();
   
@@ -15,7 +16,6 @@ function Avatar({pk, fromMessage}) {
   }
 
   const avatarCls = fromMessage ?  currentUser.id === user?.id ?  'bg-sky-600' : 'bg-rose-600' : 'bg-sky-600';
-
 
   return (
    <>

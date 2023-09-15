@@ -3,42 +3,38 @@
 import React, { useEffect, useState } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
-import Pusher from 'pusher-js'
 
 import UserList from './UserList'
-import DesktopSidebar from '../contacts/components/DesktopSidebar'
+import DesktopSidebar from './DesktopSidebar'
 
 import { createNotification } from '../redux/notificationSlice'
-
+import { pusherClient } from '../libs/pusher'
 
 function Sidebar({children}) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const [pusher, setPusher] = useState(null);
+  const [channel, setChannel] = useState(null);
+
+
 
   useEffect(() => {
-    if(!pusher && user) {
-      const newPusher = new Pusher(
-        process.env.NEXT_PUBLIC_PUSHER_KEY, {
-          cluster: 'ap1'
-        }
-      )
+    if(!channel && user) {
       // Listen for the connected event
-      newPusher.connection.bind('connected', () => {
+      pusherClient.connection.bind('connected', () => {
         console.log('Pusher connected successfully');
       });
 
-      newPusher.connection.bind('error', (err) => {
+      pusherClient.connection.bind('error', (err) => {
         console.error('Pusher connection error:', err);
       });
 
       // Listen for disconnection event
-      newPusher.connection.bind('disconnected', () => {
+      pusherClient.connection.bind('disconnected', () => {
           console.warn('Pusher disconnected');
       });
     
       const channelName = `${user.id}-conversations`;
-      const channel = newPusher.subscribe(channelName);
+      const channel = pusherClient.subscribe(channelName);
 
       channel.bind('new-message', function(data) {
         // Update the chat interface with the new message
@@ -53,27 +49,22 @@ function Sidebar({children}) {
         const conversation_id = data.conversation_id;
       });
 
-      setPusher(newPusher);
+      setChannel(channel)
+
     }
 
     return () => {
-      if(pusher) {
-        pusher.unsubscribe(user.id);
-        pusher.unbind('new-message');
-        pusher.unbind('new-channel');
+      if(channel) {
+        pusher.unsubscribe(`${user.id}-conversations`);
+        setChannel(null);
       }
     }
   }, [user]);
 
-  // console.log('sidebar', user);
-
-  // if(!user) {
-  //   <p>loading</p>
-  // }
 
   return (
     <div className="h-full">
-      <DesktopSidebar/>
+      <DesktopSidebar currentUser={user}/>
       <main className="lg:pl-20 h-full">
         {children}
       </main>
