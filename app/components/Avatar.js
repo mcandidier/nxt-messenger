@@ -6,16 +6,18 @@ import Image from 'next/image'
 import { useGetUser, useUserHook } from '../hooks/useUser'
 import { Loader } from 'lucide-react'
 
-function Avatar({pk, fromMessage}) {
-  
-  const {data: user, error, isLoading} = useGetUser(pk)
-  const {data: currentUser, isLoading: currentUserLoading} = useUserHook();
-  
-  if(isLoading && currentUserLoading) {
-    return <Loader></Loader>
-  }
 
-  const avatarCls = fromMessage ?  currentUser.id === user?.id ?  'bg-sky-600' : 'bg-rose-600' : 'bg-sky-600';
+import useActiveMembers from '../hooks/useActiveMembers'
+
+
+function Avatar({pk, fromMessage, currentUser}) {
+  const { members } = useActiveMembers();
+
+  console.log('member', members)
+  const {data: user, error, isLoading} = useGetUser(pk);
+  
+  const isActive = members.indexOf(user?.id) !== -1;
+  const avatarCls = fromMessage ? currentUser.id === user?.id ?  'bg-sky-600' : 'bg-rose-600' : 'bg-sky-600';
 
   return (
    <>
@@ -55,6 +57,25 @@ function Avatar({pk, fromMessage}) {
         <div className='flex'>
           {user.name}
         </div>
+      )}
+
+      {isActive && (
+         <span 
+         className="
+           absolute 
+           block 
+           rounded-full 
+           bg-green-500 
+           ring-2 
+           ring-white 
+           top-0 
+           right-0
+           h-2 
+           w-2 
+           md:h-3 
+           md:w-3
+         " 
+       />
       )}
     </div>
     )

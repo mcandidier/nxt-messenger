@@ -20,8 +20,8 @@ import format from 'date-fns/format';
 import API from '@/app/API';
 
 
-function Body({params, messages, setMessages, loading }) {
-  const { data: currentUser} = useUserHook();
+function Body({params, messages, setMessages, loading, currentUser }) {
+
   const {messageId} = params;
   const bottomRef = useRef(null);
   const [newMessage, setNewMessage] = useState(null)
@@ -49,7 +49,6 @@ function Body({params, messages, setMessages, loading }) {
     });
 
     channel.bind('message:seen', (data)=>{
-      console.log('test >>>>>', data);
       setSeenMessage(data);
     });
 
@@ -63,13 +62,12 @@ function Body({params, messages, setMessages, loading }) {
       const clonedObject = { ...message, isSame: true };
       setMessages([...messages, clonedObject]);
       if(newMsg.id === message.id) {
-        if(message.sender !== currentUser.id ) {
+        if(message.sender !== currentUser?.id ) {
           const url = `conversations/${message.conversation}/messages/${message.id}/seen/`;
           API.put(url).then(resp => {
             console.log(resp.data, 'seen');
           });
         }
-
       }
       // update seen status
     });
@@ -128,7 +126,7 @@ function Body({params, messages, setMessages, loading }) {
                     <p className='text-xs text-gray-400'>{format(new Date(message.timestamp), 'p')}</p>
                   </div>
                 )}
-                <Avatar pk={message.sender} fromMessage={true}></Avatar>
+                <Avatar pk={message.sender} fromMessage={true} currentUser={currentUser}></Avatar>
                 {!isSender && (
                   <div className='flex'>
                     <p className='text-xs text-gray-400'>{format(new Date(message.timestamp), 'p')}</p>

@@ -15,13 +15,11 @@ function Sidebar({children}) {
   const user = useSelector((state) => state.user);
   const [channel, setChannel] = useState(null);
 
-
-
   useEffect(() => {
     if(!channel && user) {
       // Listen for the connected event
       pusherClient.connection.bind('connected', () => {
-        console.log('Pusher connected successfully');
+        console.log('Pusher aa successfully');
       });
 
       pusherClient.connection.bind('error', (err) => {

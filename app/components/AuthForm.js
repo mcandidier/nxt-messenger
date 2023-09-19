@@ -54,18 +54,14 @@ function AuthForm({isLogin}) {
   })
 
 
-  console.log(errors, 'errors')
-
   const onSubmit = async (data) => {
-    // setIsLoading(true);
-    console.log('submit');
-    const url = isLogin ? 'accounts/login/': 'accounts/register/';
+    const url = isLogin ? 'accounts/token/': 'accounts/register/';
     try {
       const response = await API.post(url, data);
-      const {token} = await response.data;
-
-      if(token) {
-        setCookie(null, 'token', token, {
+      const {access:token, refresh} = await response.data;
+      const access = token;
+      if(access) {
+        setCookie(null, 'token', access, {
           maxAge: 30 * 24 * 60 * 60, // 30 days
           path: '/',
         });

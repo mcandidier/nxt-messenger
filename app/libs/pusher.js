@@ -1,7 +1,27 @@
 import Pusher from 'pusher-js'
 
 
-export const  pusherClient =  new Pusher(
+import getToken from './getToken'
+
+const {token} = getToken();
+
+
+export const pusherSever =  new Pusher(
+
+
+  process.env.NEXT_PUBLIC_PUSHER_KEY, {
+    authEndpoint: 'http://localhost:8000/api/test/',
+    cluster: 'ap1',
+    auth:{
+      headers :{
+        authorization: `Bearer ${token}`
+      }
+    },
+  }
+)
+
+
+export const pusherClient = new Pusher(
   process.env.NEXT_PUBLIC_PUSHER_KEY, {
     cluster: 'ap1'
   }

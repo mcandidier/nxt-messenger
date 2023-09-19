@@ -17,7 +17,7 @@ export default function RootLayout({
       <body>
           <AuthContextProvider>
             <Toaster/>
-            <ActiveStatus></ActiveStatus>
+            <ActiveStatus/>
             <Providers>
               {children}
             </Providers>
