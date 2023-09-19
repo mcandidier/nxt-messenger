@@ -18,33 +18,6 @@ function Convo({params, data, currentUser }) {
   const [messages, setMessages] = useState(data);
   const [loading, setLoading ] = useState(false);
 
-  // useEffect(() => {
-
-  //   const fetchData = async () => {
-  //     setLoading(true);
-  //     const url =  `conversations/${messageId}/messages/`;
-  //     const resp =  await API.get(url);
-  //     const data = await resp.data;
-  //     setMessages(data);
-      
-  //     if(resp.status === 200) {
-  //       setTimeout(() => {
-  //         setLoading(false)
-  //       }, 2000);
-  //     }
-  //   }
-
-  //   fetchData();
-  //   return () => {
-  //     setMessages([]);
-  //     setLoading(false)
-  //   }
-  // }, []);
-
-  // if(loading) {
-  //   return <Loading/>
-  // }
-
   return (
     <div className='h-full flex flex-col'>
       <Body params={params} 
