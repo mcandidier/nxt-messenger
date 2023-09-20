@@ -12,26 +12,27 @@ const useActiveChannel = () => {
   const [activeChannel, setActiveChannel] = useState(null);
 
   useEffect(() => {
-
-    if (!activeChannel) {
+    const channel = activeChannel;
+    if (!channel) {
       const channel = pusherSever.subscribe('presence-messenger');
+      setActiveChannel(channel);
 
       channel.bind("pusher:subscription_succeeded", (members) => {
         const initialMembers = [];
+        console.log(initialMembers)
   
-        members?.each((member) => initialMembers.push(Number(member.id)));
+        members.each((member) => initialMembers.push(Number(member.id)));
         set(initialMembers);
       });
   
       channel.bind("pusher:member_added", (member) => {
-        add(member.id)
+        add(Number(member.id))
       });
   
       channel.bind("pusher:member_removed", (member) => {
-        remove(member.id);
+        remove(Number(member.id));
       });
 
-      setActiveChannel(channel);
 
     }
 
@@ -39,9 +40,10 @@ const useActiveChannel = () => {
       if (activeChannel) {
         pusherSever.unsubscribe('presence-messenger');
         setActiveChannel(null);
+        console.log('unsubscribe')
       }
     }
-  }, []);
+  }, [activeChannel, set, add, remove]);
 }
 
 export default useActiveChannel;

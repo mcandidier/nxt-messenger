@@ -37,7 +37,6 @@ function Body({params, messages, setMessages, loading, currentUser }) {
     bottomRef?.current?.scrollIntoView();
 
     pusherSever.connection.bind('connected', () => {
-      console.log('Pusher aaa successfully');
     });
 
     if(!channel) {
@@ -68,9 +67,7 @@ function Body({params, messages, setMessages, loading, currentUser }) {
       if(newMsg.id === message.id) {
         if(message.sender !== currentUser?.id ) {
           const url = `conversations/${message.conversation}/messages/${message.id}/seen/`;
-          API.put(url).then(resp => {
-            console.log(resp.data, 'seen');
-          });
+          API.put(url);
         }
       }
       // update seen status
@@ -92,10 +89,7 @@ function Body({params, messages, setMessages, loading, currentUser }) {
     if(newMsg && !newMessages.length) {
       const url = `conversations/${newMsg.conversation}/messages/${newMsg.id}/seen/`;
       if(newMsg.sender !== currentUser.id ) {
-
-        API.put(url).then(resp => {
-          console.log(resp.data, 'refresh');
-        });
+        API.put(url);
       }
     }
 

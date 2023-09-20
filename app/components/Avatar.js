@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { useGetUser, useUserHook } from '../hooks/useUser'
 import { Loader } from 'lucide-react'
 
-
+import clsx from 'clsx'
 import useActiveMembers from '../hooks/useActiveMembers'
 
 
@@ -17,6 +17,9 @@ function Avatar({pk, fromMessage, currentUser}) {
   
   const isActive = members.indexOf(user?.id) !== -1;
   const avatarCls = fromMessage ? currentUser.id === user?.id ?  'bg-sky-600' : 'bg-rose-600' : 'bg-sky-600';
+
+  const isOwner = fromMessage && user?.id === currentUser?.id;
+
 
   return (
    <>
@@ -59,21 +62,24 @@ function Avatar({pk, fromMessage, currentUser}) {
       )}
 
       {isActive && (
+        
          <span 
-         className="
-           absolute 
-           block 
-           rounded-full 
-           bg-green-500 
-           ring-2 
-           ring-white 
-           top-0 
-           right-0
-           h-2 
-           w-2 
-           md:h-3 
-           md:w-3
-         " 
+         className={clsx(
+          `absolute 
+          block 
+          rounded-full 
+          bg-green-500 
+          ring-2 
+          ring-white 
+          top-0 
+          right-0
+          h-2 
+          w-2 
+          md:h-3 
+          md:w-3`
+          ,
+          isOwner ? 'right-0': 'left-6'
+         )}
        />
       )}
     </div>
