@@ -11,13 +11,11 @@ import Loading from './loader'
 import { useUserHook } from '../hooks/useUser'
 import { useSelector } from 'react-redux'
 
-function Conversations() {
+function Conversations({conversations}) {
 
+  console.log(conversations, 'ddd')
   const[ loading, setLoading] = useState(true);
-  const {data: conversations, isLoading} = useConversationsHook();
-
   const currentUser = useSelector((state) => state.user)
-
   const newMessages = useSelector((state) => state.notifications);
 
   useEffect(() => {
@@ -42,18 +40,17 @@ function Conversations() {
               Messages
             </div>
           </div>
-          { isLoading  && (
+          {/* { isLoading  && (
             <Loading></Loading>
           )
-          }
+          } */}
 
-          {!isLoading && currentUser && (
-             conversations.map((message) => {
+          {currentUser && (
+             conversations?.map((message) => {
               Object.preventExtensions(message);
               let msgObj = { ...message, hasNew: false };
 
               const foundObjects = _.find(newMessages, { conversation: Number(message.id) });
-
               if(foundObjects) {
                 Object.preventExtensions(message);
                 msgObj= { ...message, hasNew: true };

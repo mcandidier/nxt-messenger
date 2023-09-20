@@ -5,7 +5,6 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import clsx from 'clsx';
-import Pusher from 'pusher-js'
 import _, { last } from 'lodash'
 
 import { useConversationMessages } from '@/app/hooks/useConversations'
@@ -19,38 +18,43 @@ import EmpytState from '@/app/components/EmpytState';
 import format from 'date-fns/format';
 import API from '@/app/API';
 
+import { pusherSever } from '@/app/libs/pusher';
+
 
 function Body({params, messages, setMessages, loading, currentUser }) {
 
   const {messageId} = params;
   const bottomRef = useRef(null);
   const [newMessage, setNewMessage] = useState(null)
-  const [pusher, setPusher]= useState(null)
 
   const newMessages = useSelector((state) => state.notifications);
   const [seenMessage, setSeenMessage]  = useState(null);
 
+  const [channel, setChannel] = useState(null);
+  const channelName = `channel-${messageId}`;
 
   useEffect(() => {
     bottomRef?.current?.scrollIntoView();
-    const newPusher = new Pusher(
-      process.env.NEXT_PUBLIC_PUSHER_KEY, {
-        cluster: 'ap1',
-      }
-    )
 
-    newPusher.connection.bind('connected', () => {
+    pusherSever.connection.bind('connected', () => {
       console.log('Pusher aaa successfully');
     });
 
-    const channel = newPusher.subscribe(`channel-${messageId}`);
-    channel.bind("pusher:subscription_error", (error) => {
-      console.log('error',error)
-    });
-
-    channel.bind('message:seen', (data)=>{
-      setSeenMessage(data);
-    });
+    if(!channel) {
+      const privateChannel = pusherSever.subscribe(channelName);
+      privateChannel.bind("pusher:subscription_succeeded", () => {
+        console.log('connected to private', channelName);
+      })
+      
+      privateChannel.bind("pusher:subscription_error", (error) => {
+        console.log('error from privateChannel',error)
+      });
+  
+      privateChannel.bind('message:seen', (data)=>{
+        setSeenMessage(data);
+      });
+      setChannel(privateChannel);
+    }
 
     const foundObjects = _.filter(newMessages, { conversation: Number(messageId) });
     const newMsg = foundObjects[foundObjects.length -1]
@@ -71,6 +75,13 @@ function Body({params, messages, setMessages, loading, currentUser }) {
       }
       // update seen status
     });
+
+
+    return () => {
+      if(channel) {
+        pusherSever.unsubscribe(channelName);
+      }
+    }
     
   }, [newMessages]);
 

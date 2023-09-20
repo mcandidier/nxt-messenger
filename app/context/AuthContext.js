@@ -23,7 +23,6 @@ export default function AuthContextProvider({children}) {
   }
 
   useEffect(()=> {
-    console.log('provider')
     const fetchData = async() => {
       try {
         const data = await getUser();

@@ -13,7 +13,6 @@ import useActiveMembers from '../hooks/useActiveMembers'
 function Avatar({pk, fromMessage, currentUser}) {
   const { members } = useActiveMembers();
 
-  console.log('member', members)
   const {data: user, error, isLoading} = useGetUser(pk);
   
   const isActive = members.indexOf(user?.id) !== -1;
