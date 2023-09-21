@@ -24,9 +24,7 @@ export default function Providers({ children }) {
       // todo: check token if valid then request user.
       getUser();
     }
-  }, []);
-
-
+  }, [token]);
 
   return <Provider store={store}>{children}</Provider>;
 }

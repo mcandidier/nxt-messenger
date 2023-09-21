@@ -7,11 +7,6 @@ import { parseCookies } from 'nookies';
 export const useUserHook = () => {
     const cookies = parseCookies();
     const token = cookies.token;
-
-    if(!token) {
-        return SWRfallback;
-    }
-
     const {data, mutate, isLoading, error} = useSWR('accounts/user/', fetcher);
 
     return {
@@ -23,9 +18,9 @@ export const useUserHook = () => {
 }
 
 export const useGetUser = (pk) => {
-    if(!pk) {
-        return SWRfallback;
-    }
+    // if(!pk) {
+    //     return SWRfallback;
+    // }
 
     const {data, mutate, isLoading, error} = useSWR(`accounts/user/${pk}/`, fetcher);
 

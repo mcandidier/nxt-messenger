@@ -40,13 +40,17 @@ export default function AuthContextProvider({children}) {
       fetchData();
       setIsAuthenticated(true)
     }
-  }, []);
+
+    return () => {
+      setIsAuthenticated(false);
+    }
+
+  },[router, token]);
 
 
   return(
       <AuthContext.Provider value={{isAuthenticated, setIsAuthenticated, currentUser}}>
         {children}
       </AuthContext.Provider>
-
   )
 }

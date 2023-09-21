@@ -9,7 +9,6 @@ import { useMemo } from "react";
 export const useConversationsHook = () => {
 
     const {data, mutate, isLoading, error} = useSWR('conversations/', fetcher);
-
     return {
         data,
         mutate,
@@ -46,6 +45,6 @@ export const useConversation = () => {
   return useMemo(() => ({
     isSelected,
     conversationId
-  }), [conversationId]);
+  }), [conversationId, isSelected]);
 };
 

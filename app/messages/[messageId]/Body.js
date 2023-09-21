@@ -80,7 +80,13 @@ function Body({params, messages, setMessages, loading, currentUser }) {
       }
     }
     
-  }, [newMessages]);
+  }, [
+    channel,
+    channelName,
+    messageId,
+    currentUser?.id,
+    newMessages,
+  ]);
 
 
   useEffect(() => {
@@ -96,7 +102,7 @@ function Body({params, messages, setMessages, loading, currentUser }) {
     return () => {
       setNewMessage(null);
     }
-  }, [messages]);
+  }, [messages, currentUser.id, newMessages.length]);
 
 
 

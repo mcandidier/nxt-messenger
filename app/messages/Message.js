@@ -34,7 +34,7 @@ function Message ({message, currentUser}) {
   useEffect(() => {
     mutatedLastMessage();
 
-  }, [message.hasNew]);
+  }, [message.hasNew, mutatedLastMessage]);
 
 
   const receiverId = _.find(message.participants, participant => participant !== message.owner);
