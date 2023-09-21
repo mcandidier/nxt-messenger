@@ -8,7 +8,7 @@ import { CldUploadButton } from 'next-cloudinary';
 
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
-import Modal from './modal';
+import Modal from './Modal';
 import InputWithErrors from '../input';
 
 const SettingsModal = ({ 
@@ -18,8 +18,6 @@ const SettingsModal = ({
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-
-  console.log(currentUser, '&TEST_CURRENT_USER')
 
   const {
     register,
