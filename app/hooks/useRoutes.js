@@ -9,8 +9,6 @@ const useRoutes = () => {
   const pathname = usePathname();
   const { conversationId } = useConversation();
 
-  console.log(conversationId, 'test')
-
   const routes = useMemo(() => [
     { 
       label: 'Chat', 
@@ -30,7 +28,7 @@ const useRoutes = () => {
       href: '#',
       icon: HiArrowLeftOnRectangle, 
     }
-  ], [pathname]);
+  ], [pathname, conversationId]);
 
   return routes;
 };

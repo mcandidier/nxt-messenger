@@ -59,7 +59,7 @@ function Sidebar({children}) {
         setChannel(null);
       }
     }
-  }, [user]);
+  },[channel, user, dispatch]);
 
 
   return (
