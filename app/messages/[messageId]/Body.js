@@ -99,10 +99,8 @@ function Body({params, messages, setMessages, loading, currentUser }) {
   }, [messages]);
 
 
-  
+
   let nxtElem = null;
-
-
 
   return (
     <>
@@ -125,7 +123,7 @@ function Body({params, messages, setMessages, loading, currentUser }) {
           return (
             <div key={message.id} className={`flex flex-col mb-2  ${isSender ? 'items-end' : 'items-start'}`}>
               { !message?.isSame && (
-                <div className='flex gap-2 items-center rounded-sm'>
+                <div className='flex gap-2 items-center rounded-sm duration-300 opacity-100 scale-100 transform'>
                 {isSender && (
                   <div className='flex'>
                     <p className='text-xs text-gray-400'>{format(new Date(message.timestamp), 'p')}</p>
@@ -137,6 +135,8 @@ function Body({params, messages, setMessages, loading, currentUser }) {
                     <p className='text-xs text-gray-400'>{format(new Date(message.timestamp), 'p')}</p>
                   </div>
                 )}
+              
+                  
               </div>
               )}
               <div className={`${isSender ? 'bg-sky-500': 'bg-gray-100'} py-2 px-5 rounded-full text-sm w-fit`}>

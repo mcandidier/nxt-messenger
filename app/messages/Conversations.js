@@ -10,12 +10,14 @@ import { useConversationsHook } from '../hooks/useConversations'
 import Loading from './loader'
 import { useUserHook } from '../hooks/useUser'
 import { useSelector } from 'react-redux'
+import { useConversation, useConversationMessages } from '../hooks/useConversations';
 
 function Conversations({conversations}) {
+
   const[ loading, setLoading] = useState(true);
   const currentUser = useSelector((state) => state.user)
   const newMessages = useSelector((state) => state.notifications);
-
+ 
   useEffect(() => {
 
   }, [newMessages]);
@@ -49,7 +51,6 @@ function Conversations({conversations}) {
                 Object.preventExtensions(message);
                 msgObj= { ...message, hasNew: true };
               }
-
               return <Message key={message.id} message={msgObj} currentUser={currentUser}/>
             })
           )

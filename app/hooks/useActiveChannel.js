@@ -32,8 +32,6 @@ const useActiveChannel = () => {
       channel.bind("pusher:member_removed", (member) => {
         remove(Number(member.id));
       });
-
-
     }
 
     return () => {

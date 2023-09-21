@@ -15,17 +15,28 @@ import Pusher from 'pusher-js';
 import { AuthContext } from '../context/AuthContext';
 import { useGetUser } from '../hooks/useUser';
 
-import { useConversation } from '../hooks/useConversations';
+import { useConversation, useConversationMessages } from '../hooks/useConversations';
+import useLatestMessage from '../hooks/useLatestMessage';
 
-function Message({message, currentUser}) {
+
+function Message ({message, currentUser}) {
 
   const router = useRouter();
   const { conversationId, isSelected } = useConversation();
+  
+  const { data: latest, mutate: mutatedLastMessage } = useLatestMessage(message.id);
+
 
   const handleClick = (e) => {
     router.push(`/messages/${message.id}`);
   }
  
+  useEffect(() => {
+    mutatedLastMessage();
+
+  }, [message.hasNew]);
+
+
   const receiverId = _.find(message.participants, participant => participant !== message.owner);
   const userId = currentUser.id === receiverId ? message.owner : receiverId;
   const {data: user} = useGetUser(userId);
@@ -50,8 +61,8 @@ function Message({message, currentUser}) {
       <div  
         className='flex justify-between items-center cursor-pointer'>
           <p className={`text-md font-sm text-black ${message.hasNew && 'font-bold'}`}>{user?.name}</p>
-        { true && (
-          <p className='text-xs font-light text-gray-400'>{format(new Date(message.timestamp), 'p')}</p>
+        { latest && (
+          <p className='text-xs font-light text-gray-400'>{format(new Date(latest?.timestamp), 'p')}</p>
         )}
       </div>
     </div>
