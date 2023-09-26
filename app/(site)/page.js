@@ -1,11 +1,11 @@
-import React from 'react';
+'use client'
+
+import { useRouter } from 'next/navigation';
 
 function Home() {
-
-  return (
-
-  <div>Home</div>
-  )
+  const router = useRouter();
+  router.push('/messages');
+  return (null)
 }
 
 
