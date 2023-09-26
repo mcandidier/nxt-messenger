@@ -65,13 +65,12 @@ function AuthForm({isLogin}) {
           maxAge: 30 * 24 * 60 * 60, // 30 days
           path: '/',
         });
-        router.push('/messages');
+        location.replace('/messages');
       } else {
         toast.success('Account successfully created.')
         router.push('/login');
       }
     } catch(error) {
-    console.log('error', error)
       if(isLogin) {
         setPasswordError('Invalid username or password.');
       } else {
@@ -84,7 +83,6 @@ function AuthForm({isLogin}) {
           });
         });
       }
-    
     }
   }
   return (
