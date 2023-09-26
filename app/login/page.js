@@ -2,7 +2,6 @@ import React from 'react'
 import Image from 'next/image'
 import AuthForm from '@/app/components/AuthForm'
 
-
 function login() {
   return (
     <div 
@@ -27,4 +26,4 @@ function login() {
     )
 }
 
-export default login
+export default login;

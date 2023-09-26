@@ -11,7 +11,9 @@ import axios from "axios";
 import useActiveChannel from "../hooks/useActiveChannel";
 
 function ActiveStatus() {
-  useActiveChannel();
+
+
+  // useActiveChannel();
   return null;
 }
 

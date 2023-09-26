@@ -16,6 +16,7 @@ export default function AuthContextProvider({children}) {
   const cookies = parseCookies();
   const token = cookies.token;
 
+
   const getUser = async () => {
     const resp = await API.get('accounts/user/');
     const data = await resp.data;
@@ -35,10 +36,11 @@ export default function AuthContextProvider({children}) {
 
     if (!token || token === 'undefined') {
       router.push('/login');
-      return;
+      setLoading(false)
     } else {
       fetchData();
-      setIsAuthenticated(true)
+      setIsAuthenticated(true);
+      setLoading(false)
     }
 
     return () => {
@@ -47,6 +49,10 @@ export default function AuthContextProvider({children}) {
 
   },[router, token]);
 
+
+  if(loading) {
+    return (null);
+  }
 
   return(
       <AuthContext.Provider value={{isAuthenticated, setIsAuthenticated, currentUser}}>

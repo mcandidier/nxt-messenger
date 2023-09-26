@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 
-import UserList from './UserList'
 import DesktopSidebar from './DesktopSidebar'
 
 import { createNotification } from '../redux/notificationSlice'
