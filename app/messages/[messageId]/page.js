@@ -15,8 +15,8 @@ async function Message({params}) {
   if(!token) {
     return (null);
   }
-  
-  const { data } = await getMessages(messageId);
+
+  const { data  } = await getMessages(messageId);
   const {data: currentUser} = await getCurrentUser();
 
   return (
