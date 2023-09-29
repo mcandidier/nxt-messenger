@@ -9,7 +9,6 @@ import _, { last } from 'lodash'
 
 import { useConversationMessages } from '@/app/hooks/useConversations'
 import { AuthContext } from '../../context/AuthContext';
-import { useUserHook } from '../../hooks/useUser';
 
 import Header from '../Header';
 import Loading from './loader';
@@ -22,7 +21,8 @@ import { pusherSever } from '@/app/libs/pusher';
 
 
 function Body({params, messages, setMessages, loading, currentUser }) {
-
+  console.log(currentUser, 'currentUser')
+  
   const {messageId} = params;
   const bottomRef = useRef(null);
   const [newMessage, setNewMessage] = useState(null)
@@ -77,15 +77,11 @@ function Body({params, messages, setMessages, loading, currentUser }) {
     return () => {
       if(channel) {
         pusherSever.unsubscribe(channelName);
+        setChannel(null)
       }
     }
-    
   }, [
     channel,
-    channelName,
-    messageId,
-    currentUser?.id,
-    newMessages,
   ]);
 
 
@@ -99,11 +95,11 @@ function Body({params, messages, setMessages, loading, currentUser }) {
       }
     }
 
+
     return () => {
       setNewMessage(null);
     }
-  }, [messages, currentUser.id, newMessages.length]);
-
+  }, [newMessage]);
 
 
   let nxtElem = null;
@@ -142,7 +138,6 @@ function Body({params, messages, setMessages, loading, currentUser }) {
                   </div>
                 )}
               
-                  
               </div>
               )}
               <div className={`${isSender ? 'bg-sky-500': 'bg-gray-100'} py-2 px-5 rounded-full text-sm w-fit`}>
@@ -173,7 +168,8 @@ function Body({params, messages, setMessages, loading, currentUser }) {
       </div>
   </>
   )
+
 }
 
-export default Body
+export default Body;
 

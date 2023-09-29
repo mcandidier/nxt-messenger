@@ -7,7 +7,6 @@ import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
 export const useConversationsHook = () => {
-
     const {data, mutate, isLoading, error} = useSWR('conversations/', fetcher);
     return {
         data,
@@ -29,7 +28,7 @@ export const useConversationMessages = (conversationId) => {
 }
 
 
-export const useConversation = () => {
+export const useConversation = (id) => {
   const params = useParams();
 
   const conversationId = useMemo(() => {
@@ -41,7 +40,9 @@ export const useConversation = () => {
   }, [params?.messageId]);
 
 
-  const isSelected = useMemo(() => !!conversationId, [conversationId])
+  const isSelected = useMemo(() => {
+    return id === Number(conversationId);
+  }, [conversationId, id])
   return useMemo(() => ({
     isSelected,
     conversationId

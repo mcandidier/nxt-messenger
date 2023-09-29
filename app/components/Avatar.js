@@ -1,24 +1,49 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 
-import { useGetUser, useUserHook } from '../hooks/useUser'
+// import { useGetUser, useUserHook } from '../hooks/useUser'
 import { Loader } from 'lucide-react'
 
 import clsx from 'clsx'
 import useActiveMembers from '../hooks/useActiveMembers'
+import API from '../API'
 
 
 function Avatar({pk, fromMessage, currentUser}) {
   const { members } = useActiveMembers();
+  const [isLoading, setIsLoading] = useState(false)
+  const [user, setUser] = useState(null);
+  const [isActive, setIsActive] = useState(false)
 
-  const {data: user, error, isLoading} = useGetUser(pk);
-  
-  const isActive = members.indexOf(user?.id) !== -1;
   const avatarCls = fromMessage ? currentUser.id === user?.id ?  'bg-sky-600' : 'bg-rose-600' : 'bg-sky-600';
-
   const isOwner = fromMessage && user?.id === currentUser?.id;
+  
+  if(!pk) {
+    return (null);
+  }
+
+  useEffect(() => {
+    setIsLoading(true)
+    try {
+      API.get(`accounts/user/${pk}`).then((resp) => {
+        setUser(resp.data);
+        setIsLoading(false)
+      });
+      const active = members.indexOf(user?.id) !== -1;
+      setIsActive(active);
+    } catch (err) {
+      alert(err)
+    }
+    return () => {
+      setUser(null);
+      setIsLoading(false);
+      setIsActive(false);
+    }
+
+  }, [pk])
+
 
 
   return (

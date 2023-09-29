@@ -1,9 +1,12 @@
 import API from "../libs/api";
 
-
 export const getCurrentUser = async () => {
-  const resp = await API.get('accounts/user/');
-  return {
-    data: await resp.data
-  } 
+  try {
+    const resp = await API.get('accounts/user/');
+    return {
+      data: await resp.data
+    } 
+  } catch (err) {
+    console.log('errror>>>>', err)
+  }
 }

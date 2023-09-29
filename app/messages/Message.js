@@ -13,34 +13,36 @@ import format from 'date-fns/format';
 
 import Pusher from 'pusher-js';
 import { AuthContext } from '../context/AuthContext';
-import { useGetUser } from '../hooks/useUser';
+
 
 import { useConversation, useConversationMessages } from '../hooks/useConversations';
 import useLatestMessage from '../hooks/useLatestMessage';
-
+import getUserById from '../actions/getUserById';
 
 function Message ({message, currentUser}) {
 
   const router = useRouter();
-  const { conversationId, isSelected } = useConversation();
-  
-  const { data: latest, mutate: mutatedLastMessage } = useLatestMessage(message.id);
-
-
+  const { conversationId, isSelected } = useConversation(message.id);
+  // const { data: latest, mutate: mutatedLastMessage } = useLatestMessage(message.id);
+  const [user, setUser] = useState(null);
   const handleClick = (e) => {
     router.push(`/messages/${message.id}`);
   }
- 
-  useEffect(() => {
-    mutatedLastMessage();
-
-  }, [message.hasNew, mutatedLastMessage]);
-
-
   const receiverId = _.find(message.participants, participant => participant !== message.owner);
   const userId = currentUser.id === receiverId ? message.owner : receiverId;
-  const {data: user} = useGetUser(userId);
-  
+
+
+  useEffect(() => {
+    getUserById(userId).then((resp) => {
+      setUser(resp.data);
+    });
+
+    return () => {
+      setUser(null);
+    }
+  }, [userId])
+
+
   return (
     <div className={clsx(`
       cursor-ponter
@@ -61,9 +63,9 @@ function Message ({message, currentUser}) {
       <div  
         className='flex justify-between items-center cursor-pointer'>
           <p className={`text-md font-sm text-black ${message.hasNew && 'font-bold'}`}>{user?.name}</p>
-        { latest && (
+        {/* { latest && (
           <p className='text-xs font-light text-gray-400'>{format(new Date(latest?.timestamp), 'p')}</p>
-        )}
+        )} */}
       </div>
     </div>
     </div>

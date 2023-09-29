@@ -9,6 +9,8 @@ import { HiPaperAirplane, HiPhoto } from 'react-icons/hi2';
 import MessageInput from './MessageInput';
 import { useConversationMessages } from '../hooks/useConversations';
 
+import postMessage from '../actions/postMessage';
+import { toast } from 'react-hot-toast';
 
 function Form({params, setMessages, messages}) {
   const {messageId} = params;
@@ -23,10 +25,14 @@ function Form({params, setMessages, messages}) {
 
   const onSubmit = async (data) => {
     reset()
-    const resp = await API.post(`conversations/${messageId}/messages/`, data);
-    if(resp.status === 201) {
-      setMessages([...messages, resp.data])
-    } 
+    try {
+      const resp = await postMessage(messageId, data);
+      if(resp.status === 201) {
+        setMessages([...messages, resp.data])
+      } 
+    } catch (err) {
+      toast.error('Something went wrong')
+    }
   }
 
 

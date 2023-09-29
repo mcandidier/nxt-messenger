@@ -19,7 +19,6 @@ const useActiveChannel = () => {
 
       channel.bind("pusher:subscription_succeeded", (members) => {
         const initialMembers = [];
-        console.log(initialMembers)
   
         members.each((member) => initialMembers.push(Number(member.id)));
         set(initialMembers);
@@ -38,7 +37,6 @@ const useActiveChannel = () => {
       if (activeChannel) {
         pusherSever.unsubscribe('presence-messenger');
         setActiveChannel(null);
-        console.log('unsubscribe')
       }
     }
   }, [activeChannel, set, add, remove]);

@@ -18,12 +18,7 @@ export const useUserHook = () => {
 }
 
 export const useGetUser = (pk) => {
-    // if(!pk) {
-    //     return SWRfallback;
-    // }
-
     const {data, mutate, isLoading, error} = useSWR(`accounts/user/${pk}/`, fetcher);
-
     return {
         data,
         mutate,
