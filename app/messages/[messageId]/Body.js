@@ -18,16 +18,15 @@ import format from 'date-fns/format';
 import API from '@/app/API';
 
 import { pusherSever } from '@/app/libs/pusher';
+import Messages from '../page';
 
 
 function Body({params, messages, setMessages, loading, currentUser }) {
-  console.log(currentUser, 'currentUser')
-  
   const {messageId} = params;
   const bottomRef = useRef(null);
   const [newMessage, setNewMessage] = useState(null)
 
-  const newMessages = useSelector((state) => state.notifications);
+  // const newMessages = useSelector((state) => state.notifications);
   const [seenMessage, setSeenMessage]  = useState(null);
 
   const [channel, setChannel] = useState(null);
@@ -55,29 +54,10 @@ function Body({params, messages, setMessages, loading, currentUser }) {
       setChannel(privateChannel);
     }
 
-    const foundObjects = _.filter(newMessages, { conversation: Number(messageId) });
-    const newMsg = foundObjects[foundObjects.length -1]
-    setNewMessage(newMsg);
-
-    foundObjects.map((message) => {
-      Object.preventExtensions(message);
-      // Clone the object and add a new property
-      const clonedObject = { ...message, isSame: true };
-      setMessages([...messages, clonedObject]);
-      if(newMsg.id === message.id) {
-        if(message.sender !== currentUser?.id ) {
-          const url = `conversations/${message.conversation}/messages/${message.id}/seen/`;
-          API.put(url);
-        }
-      }
-      // update seen status
-    });
-
-
     return () => {
       if(channel) {
         pusherSever.unsubscribe(channelName);
-        setChannel(null)
+        setChannel(null);
       }
     }
   }, [
@@ -85,21 +65,20 @@ function Body({params, messages, setMessages, loading, currentUser }) {
   ]);
 
 
-  useEffect(() => {
-    const newMsg = messages[messages.length - 1]
-    setNewMessage(newMsg);
-    if(newMsg && !newMessages.length) {
-      const url = `conversations/${newMsg.conversation}/messages/${newMsg.id}/seen/`;
-      if(newMsg.sender !== currentUser.id ) {
-        API.put(url);
-      }
-    }
+  // useEffect(() => {
+  //   const newMsg = messages[messages.length - 1]
+  //   setNewMessage(newMsg);
+  //   if(newMsg && !newMessages.length) {
+  //     const url = `conversations/${newMsg.conversation}/messages/${newMsg.id}/seen/`;
+  //     if(newMsg.sender !== currentUser.id ) {
+  //       API.put(url);
+  //     }
+  //   }
 
-
-    return () => {
-      setNewMessage(null);
-    }
-  }, [newMessage]);
+  //   return () => {
+  //     setNewMessage(null);
+  //   }
+  // }, [newMessage]);
 
 
   let nxtElem = null;
