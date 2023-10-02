@@ -23,25 +23,27 @@ function Convo({params, data, currentUser }) {
 
   const newMessages = useSelector((state) => state.notifications);
 
-  // console.log(newMessages, 'new')
-
-
-
-
   useEffect(() => {
+    let lastMessage = messages[messages.length - 1];
     newMessages.filter(msg => {
       if(msg.conversation === Number(messageId)) {
-        console.log(msg, 'msg')
         const clonedObject = { ...msg, isSame: true };
         setMessages([...messages, clonedObject]);
+        lastMessage = clonedObject;
       }
     })
-
+    if(lastMessage) {
+      const url = `conversations/${lastMessage.conversation}/messages/${lastMessage.id}/seen/`;
+      if(lastMessage.sender !== currentUser.id ) {
+        API.put(url);
+      }
+    }
     return () => {
-      setMessages([]);
+      setMessages(data);
     }
   }, [
     newMessages,
+    setMessages
   ])
 
   return (

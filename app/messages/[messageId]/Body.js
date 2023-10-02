@@ -25,8 +25,6 @@ function Body({params, messages, setMessages, loading, currentUser }) {
   const {messageId} = params;
   const bottomRef = useRef(null);
   const [newMessage, setNewMessage] = useState(null)
-
-  // const newMessages = useSelector((state) => state.notifications);
   const [seenMessage, setSeenMessage]  = useState(null);
 
   const [channel, setChannel] = useState(null);
@@ -48,9 +46,10 @@ function Body({params, messages, setMessages, loading, currentUser }) {
         console.log('error from privateChannel',error)
       });
   
-      privateChannel.bind('message:seen', (data)=>{
+      privateChannel.bind('message:seen', (data)=> {
         setSeenMessage(data);
       });
+
       setChannel(privateChannel);
     }
 
@@ -62,24 +61,8 @@ function Body({params, messages, setMessages, loading, currentUser }) {
     }
   }, [
     channel,
+    seenMessage,
   ]);
-
-
-  // useEffect(() => {
-  //   const newMsg = messages[messages.length - 1]
-  //   setNewMessage(newMsg);
-  //   if(newMsg && !newMessages.length) {
-  //     const url = `conversations/${newMsg.conversation}/messages/${newMsg.id}/seen/`;
-  //     if(newMsg.sender !== currentUser.id ) {
-  //       API.put(url);
-  //     }
-  //   }
-
-  //   return () => {
-  //     setNewMessage(null);
-  //   }
-  // }, [newMessage]);
-
 
   let nxtElem = null;
 
@@ -124,15 +107,12 @@ function Body({params, messages, setMessages, loading, currentUser }) {
                   isSender? 'text-white': 'text-neutral-800' )}
                 >{message.content}</p>
               </div>
-
-              {newMessage?.id  === message.id && (
-                <div className='flex'>
-
-                  { seenMessage?.message === message.id && isSender && (
-                    <p className='text-xs text-neutral-400'>seen by {seenMessage?.seen_by}</p>
-                  )}
+                
+              <div className='flex'>
+                { seenMessage?.message === message.id && isSender && (
+                  <p className='text-xs text-neutral-400'>seen by {seenMessage?.seen_by}</p>
+                )}
               </div>
-              )}
           </div>
           )
 
