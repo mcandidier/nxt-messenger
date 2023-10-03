@@ -26,7 +26,6 @@ function Conversations({conversations, accounts}) {
   const dispatch = useDispatch();
   dispatch(setUsers(accounts));
 
-  
   const handleOpenConvo = () => {
     setIsOpen(true);
   }
@@ -37,9 +36,9 @@ function Conversations({conversations, accounts}) {
     setIsOpen(false);
   }
 
-  useEffect(() => {
+  // useEffect(() => {
 
-  }, [newMessages]);
+  // }, [newMessages]);
 
   return (
     <div className='
@@ -74,13 +73,11 @@ function Conversations({conversations, accounts}) {
              transition"
              onClick={handleOpenConvo}>
               <MdOutlineGroupAdd size={20} 
-                
                 />
               </div>
 
           </div>
 
-  
 
           {currentUser && (
              conversations?.map((message) => {

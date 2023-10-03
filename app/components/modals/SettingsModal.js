@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { CldUploadButton } from 'next-cloudinary';
@@ -11,13 +11,18 @@ import { toast } from 'react-hot-toast';
 import Modal from './Modal';
 import InputWithErrors from '../input';
 
+import API from '@/app/API';
+
+
+
 const SettingsModal = ({ 
   isOpen, 
   onClose, 
-  currentUser = {}
+  currentUser
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const values = {name: currentUser?.name};
 
   const {
     register,
@@ -31,7 +36,8 @@ const SettingsModal = ({
     defaultValues: {
       name: currentUser?.name,
       image: currentUser?.image
-    }
+    },
+    values
   });
 
   const image = watch('image');
@@ -45,13 +51,19 @@ const SettingsModal = ({
   const onSubmit = (data) => {
     setIsLoading(true);
 
-    axios.post('/api/settings', data)
+    API.post(`accounts/user/${currentUser?.id}/`, data)
     .then(() => {
-      router.refresh();
+      // router.refresh();
       onClose();
+      toast.success('Profile updated successfully.')
     })
     .catch(() => toast.error('Something went wrong!'))
     .finally(() => setIsLoading(false));
+  }
+
+  const pattern = {
+    value: /[A-Za-z]/,
+    message:"Sorry this CodeSandbox can only handle names with characters"
   }
 
   return (
@@ -74,16 +86,36 @@ const SettingsModal = ({
                   Edit your public information.
                 </p>
 
-                <div className="mt-10 flex flex-col gap-y-8">
-                  <InputWithErrors
+                <div className="mt-10 flex flex-col gap-y-2">
+                  {/* <InputWithErrors
                     label="Name" 
                     name='name'
                     errors={errors} 
                     required 
                     register={register}
                     type='text'
+                    pattern={pattern}
+                  /> */}
+
+                  <input
+                    type='text'
+                    name='name'
+                    {...register('name', {
+                        required: 'This field is required',
+                        pattern: {
+                          value: /[A-Za-z]/,
+                          message:"Sorry, invalid name"
+                        }
+                    })}
+                    className={`w-full px-4 py-2  border rounded-md focus:outline-none focus:border-blue-500 shadow-sm transition duration-300 ease-in-out
+                    ${errors.name ? 'border-red-500' : ''}`}
                   />
-                  <div>
+                
+                  { errors?.name && (
+                    <p className="text-red-500 text-xs">{errors?.name.message || 'This field is required'}</p>
+                  )}
+
+                  <div className='mt-2'>
                     <label 
                       htmlFor="photo" 
                       className="
@@ -104,7 +136,6 @@ const SettingsModal = ({
                         src={image || currentUser?.image || '/images/placeholder.jpg'}
                         alt="Avatar"
                       />
-                     
                   </div>
                 </div>
             </div>
