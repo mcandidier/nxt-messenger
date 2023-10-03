@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 
-// import { useGetUser, useUserHook } from '../hooks/useUser'
+import { useGetUser, useUserHook } from '../hooks/useUser'
 import { Loader } from 'lucide-react'
 
 import clsx from 'clsx'
@@ -13,42 +13,23 @@ import API from '../API'
 
 function Avatar({pk, fromMessage, currentUser}) {
   const { members } = useActiveMembers();
-  const [isLoading, setIsLoading] = useState(false)
-  const [user, setUser] = useState(null);
   const [isActive, setIsActive] = useState(false)
 
-  const avatarCls = fromMessage ? currentUser.id === user?.id ?  'bg-sky-600' : 'bg-rose-600' : 'bg-sky-600';
-  const isOwner = fromMessage && user?.id === currentUser?.id;
-  
   if(!pk) {
     return (null);
   }
-
+  const {data: user, isLoading } = useGetUser(pk);
+  const avatarCls = fromMessage ? currentUser.id === user?.id ?  'bg-sky-600' : 'bg-rose-600' : 'bg-sky-600';
+  const isOwner = fromMessage && user?.id === currentUser?.id;
+  
   useEffect(() => {
-    setIsLoading(true)
-    try {
-      API.get(`accounts/user/${pk}`).then((resp) => {
-        setUser(resp.data);
-        setIsLoading(false)
-      });
-      const active = members.indexOf(user?.id) !== -1;
-      setIsActive(active);
-    } catch (err) {
-      alert(err)
-    }
-    return () => {
-      setUser(null);
-      setIsLoading(false);
-      setIsActive(false);
-    }
-
-  }, [pk])
-
-
+    const active = members.indexOf(user?.id) !== -1;
+    setIsActive(active);
+  }, [pk, members])
 
   return (
    <>
-    {user && !isLoading && (
+    {!isLoading && user && (
       <div className="relative flex justify-center gap-2 items-center mb-1">
       {fromMessage && user?.id === currentUser?.id && (
         <div className='flex'>
@@ -67,7 +48,7 @@ function Avatar({pk, fromMessage, currentUser}) {
       
       ">
         <div className='flex'>
-          { user.image && (
+          { user?.image && (
             <Image
               fill
               src={user?.image || '/images/placeholder.jpg'}
@@ -75,7 +56,7 @@ function Avatar({pk, fromMessage, currentUser}) {
             />
           )}
 
-          { !user.image && !isLoading && (
+          { !user?.image && !isLoading && (
             <div className={ `flex text-white text-lg h-8 w-8 justify-center items-center ${avatarCls}`}>{user.email[0].toUpperCase()}</div>
           )}
         </div>
@@ -87,7 +68,6 @@ function Avatar({pk, fromMessage, currentUser}) {
       )}
 
       {isActive && (
-        
          <span 
          className={clsx(
           `absolute 

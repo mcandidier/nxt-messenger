@@ -18,6 +18,8 @@ const useActiveChannel = () => {
       setActiveChannel(channel);
 
       channel.bind("pusher:subscription_succeeded", (members) => {
+
+        console.log('members', 'active ', members);
         const initialMembers = [];
   
         members.each((member) => initialMembers.push(Number(member.id)));
