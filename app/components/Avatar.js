@@ -48,10 +48,10 @@ function Avatar({pk, fromMessage, currentUser}) {
       
       ">
         <div className='flex'>
-          { user?.image && (
+          { user?.profile_image && (
             <Image
               fill
-              src={user?.image || '/images/placeholder.jpg'}
+              src={user?.profile_image || '/images/placeholder.jpg'}
               alt={user?.email}
             />
           )}

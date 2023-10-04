@@ -13,6 +13,7 @@ import InputWithErrors from '../input';
 
 import API from '@/app/API';
 
+import { useGetUser } from '@/app/hooks/useUser';
 
 
 const SettingsModal = ({ 
@@ -41,24 +42,35 @@ const SettingsModal = ({
   });
 
   const image = watch('image');
+  const {data, mutate:mutateUser} = useGetUser(currentUser?.id)
 
-  const handleUpload = () => {
-    setValue('image', result.info.secure_url, { 
-      shouldValidate: true 
-    });
-  }
-
-  const onSubmit = (data) => {
-    setIsLoading(true);
-
+  const updateProfile = (data) => {
     API.post(`accounts/user/${currentUser?.id}/`, data)
     .then(() => {
-      // router.refresh();
+      mutateUser();
       onClose();
       toast.success('Profile updated successfully.')
     })
     .catch(() => toast.error('Something went wrong!'))
     .finally(() => setIsLoading(false));
+  }
+
+
+  const handleUpload = (result) => {
+    console.log('result.info.secure_url', result.info.secure_url);
+    setValue('image', result.info.secure_url, { 
+      shouldValidate: true 
+    });
+
+    updateProfile({
+      profile_image: result.info.secure_url
+    });
+  }
+
+
+  const onSubmit = (data) => {
+    setIsLoading(true);
+    updateProfile(data);
   }
 
   const pattern = {
@@ -87,16 +99,6 @@ const SettingsModal = ({
                 </p>
 
                 <div className="mt-10 flex flex-col gap-y-2">
-                  {/* <InputWithErrors
-                    label="Name" 
-                    name='name'
-                    errors={errors} 
-                    required 
-                    register={register}
-                    type='text'
-                    pattern={pattern}
-                  /> */}
-
                   <input
                     type='text'
                     name='name'
@@ -136,6 +138,17 @@ const SettingsModal = ({
                         src={image || currentUser?.image || '/images/placeholder.jpg'}
                         alt="Avatar"
                       />
+                       <CldUploadButton 
+                          options={{ maxFiles: 1 }} 
+                          onUpload={handleUpload} 
+                          uploadPreset="ammv4nmu"
+                        >
+                          <button
+                            type="button"
+                          >
+                            Change
+                          </button>
+                        </CldUploadButton>
                   </div>
                 </div>
             </div>
