@@ -4,10 +4,20 @@ import { HiChat } from 'react-icons/hi';
 import { HiArrowLeftOnRectangle, HiUsers } from 'react-icons/hi2';
 import { useConversation } from "./useConversations";
 
+import { destroyCookie } from 'nookies'
+import { useRouter } from "next/navigation";
+
 
 const useRoutes = () => {
   const pathname = usePathname();
   const { conversationId } = useConversation();
+  const router = useRouter();
+
+
+  const handleLogout = () => {
+    destroyCookie(undefined, 'token');
+    router.push('/login');
+  }
 
   const routes = useMemo(() => [
     { 
@@ -18,7 +28,7 @@ const useRoutes = () => {
     },
     {
       label: 'Logout', 
-      onClick: () => {},
+      onClick: handleLogout,
       href: '#',
       icon: HiArrowLeftOnRectangle, 
     }

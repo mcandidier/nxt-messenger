@@ -7,10 +7,8 @@ const {token} = getToken();
 
 
 export const pusherSever =  new Pusher(
-
-
   process.env.NEXT_PUBLIC_PUSHER_KEY, {
-    authEndpoint: 'http://localhost:8000/api/test/',
+    authEndpoint: `${process.env.NEXT_PUBLIC_API_URL}/test/`,
     cluster: 'ap1',
     auth:{
       headers :{
