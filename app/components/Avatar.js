@@ -18,6 +18,8 @@ function Avatar({pk, fromMessage, currentUser}) {
   if(!pk) {
     return (null);
   }
+
+  console.log('pk', pk);
   const {data: user, isLoading } = useGetUser(pk);
   const avatarCls = fromMessage ? currentUser.id === user?.id ?  'bg-sky-600' : 'bg-rose-600' : 'bg-sky-600';
   const isOwner = fromMessage && user?.id === currentUser?.id;
@@ -25,7 +27,7 @@ function Avatar({pk, fromMessage, currentUser}) {
   useEffect(() => {
     const active = members.indexOf(user?.id) !== -1;
     setIsActive(active);
-  }, [pk, members])
+  }, [members])
 
   return (
    <>

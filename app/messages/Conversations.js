@@ -53,7 +53,7 @@ function Conversations({conversations, accounts}) {
     w-full
   '>
     <Modal isOpen={isOpen} onClose={onClose}>
-      <AddConvo></AddConvo>
+      <AddConvo onClose={onClose}></AddConvo>
     </Modal>
     <div className='px-5'>
           <div className='flex flex-row gap-2 mb-4 mt-4 items-center	'>

@@ -23,7 +23,7 @@ import Button from './button';
 import InputWithErrors from './input';
 import { toast } from 'react-hot-toast';
 
-function AddConvo() {
+function AddConvo({onClose}) {
   const [isLoading, setIsLoading] = useState(false)
   const accounts = useSelector((state) => state.accounts);
 
@@ -50,13 +50,15 @@ function AddConvo() {
     createConversation(values).then((resp) => {
       const {id:conversation_id} = resp.data;
       postMessage(conversation_id, {content: values.message}).then((resp) => {
-
+        onClose();
       }).catch(err => {
-        toast.error('Something went wrong.')
+        toast.error('Something went wrong.');
+        onClose();
       });
 
     }).catch((err) => {
-      toast.error('Something went wrong.')
+      toast.error('Something went wrong.');
+      onClose();
     });
   }
 

@@ -18,11 +18,22 @@ export const useUserHook = () => {
 }
 
 export const useGetUser = (pk) => {
-    const {data, mutate, isLoading, error} = useSWR(`accounts/user/${pk}/`, fetcher);
-    return {
-        data,
-        mutate,
-        error,
-        isLoading,
+    try {
+        const {data, mutate, isLoading, error} = useSWR(`accounts/user/${pk}/`, fetcher);
+        return {
+            data,
+            mutate,
+            error,
+            isLoading,
+        }
+    }  catch (err) {
+        console.log(err, 'err')
+        return {
+            data: null,
+            mutate: () => {}, // Placeholder function
+            isLoading: false,
+            error: null,
+        }
     }
+
 }
