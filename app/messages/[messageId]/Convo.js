@@ -23,6 +23,7 @@ function Convo({params, data, currentUser }) {
 
   const newMessages = useSelector((state) => state.notifications);
 
+  /* eslint-disable no-console, no-control-regex*/
   useEffect(() => {
     let lastMessage = messages[messages.length - 1];
     newMessages.filter(msg => {
@@ -45,6 +46,7 @@ function Convo({params, data, currentUser }) {
     newMessages,
     setMessages
   ])
+  /* eslint-disable no-console, no-control-regex*/
 
   return (
     <div className='h-full flex flex-col'>

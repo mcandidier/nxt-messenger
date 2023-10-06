@@ -14,6 +14,12 @@ import API from '../API'
 function Avatar({pk, fromMessage, currentUser}) {
   const { members } = useActiveMembers();  
   const [isActive, setIsActive] = useState(false);
+
+  console.log(pk, 'pk');
+
+  if(pk === undefined) {
+    return (null)
+  }
   const {data: user, isLoading } = useGetUser(pk);
 
   useEffect(() => {

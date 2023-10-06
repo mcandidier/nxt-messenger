@@ -62,6 +62,7 @@ function Body({params, messages, setMessages, loading, currentUser }) {
   }, [
     channel,
     seenMessage,
+    channelName,
   ]);
 
   let nxtElem = null;
@@ -93,7 +94,9 @@ function Body({params, messages, setMessages, loading, currentUser }) {
                     <p className='text-xs text-gray-400'>{format(new Date(message.timestamp), 'p')}</p>
                   </div>
                 )}
-                <Avatar pk={message.sender} fromMessage={true} currentUser={currentUser}></Avatar>
+                { message.sender && (
+                  <Avatar pk={message.sender} fromMessage={true} currentUser={currentUser}></Avatar>
+                )}
                 {!isSender && (
                   <div className='flex'>
                     <p className='text-xs text-gray-400'>{format(new Date(message.timestamp), 'p')}</p>
