@@ -120,7 +120,7 @@ function AddConvo({onClose}) {
         </div>
         
         <div className='mt-10 flex flex-col gap-y-8'>
-          <label for='contact'>To:
+          <label htmlFor='contact'>To:
            
             { selectedUserID ? 
               <div className='w-1/6 inline-flex ml-2 gap-2 align-middle'>
@@ -128,7 +128,7 @@ function AddConvo({onClose}) {
 
                 <button type="button" 
                   onClick={handleRemove}
-                  class="px-2 text-xs h-4 text-center text-white bg-rose-400 rounded-lg hover:bg-rose-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-rose-500 dark:hover:bg-rose-700 dark:focus:ring-rose-800">clear</button>
+                  className="px-2 text-xs h-4 text-center text-white bg-rose-400 rounded-lg hover:bg-rose-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-rose-500 dark:hover:bg-rose-700 dark:focus:ring-rose-800">clear</button>
               </div>
             : 
                 <TextInput 
