@@ -14,31 +14,26 @@ import { useConversation, useConversationMessages } from '../hooks/useConversati
 import Modal from '../components/modals/Modal'
 import AddConvo from '../components/AddConvo'
 
-import { setUsers  } from "../redux/accounts";
-import { useDispatch } from "react-redux";
+// import { setUsers  } from "../redux/accounts";
+// import { useDispatch } from "react-redux";
+  // const dispatch = useDispatch();
+  // dispatch(setUsers(accounts));
+
 
 function Conversations({conversations, accounts}) {
 
-  const[ loading, setLoading] = useState(true);
   const currentUser = useSelector((state) => state.user)
   const newMessages = useSelector((state) => state.notifications);
- 
-  const dispatch = useDispatch();
-  dispatch(setUsers(accounts));
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleOpenConvo = () => {
     setIsOpen(true);
   }
 
-  const [isOpen, setIsOpen] = useState(false);
-
   const onClose = () => {
     setIsOpen(false);
   }
 
-  // useEffect(() => {
-
-  // }, [newMessages]);
 
   return (
     <div className='
@@ -55,6 +50,7 @@ function Conversations({conversations, accounts}) {
     <Modal isOpen={isOpen} onClose={onClose}>
       <AddConvo onClose={onClose}></AddConvo>
     </Modal>
+
     <div className='px-5'>
           <div className='flex flex-row gap-2 mb-4 mt-4 items-center	'>
             <div className='text-1xl font-semibold text-neutral-800 w-80'>
@@ -77,7 +73,6 @@ function Conversations({conversations, accounts}) {
               </div>
 
           </div>
-
 
           {currentUser && (
              conversations?.map((message) => {
