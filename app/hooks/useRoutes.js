@@ -16,7 +16,7 @@ const useRoutes = () => {
 
   const handleLogout = () => {
     destroyCookie(undefined, 'token');
-    location.replace('/login');
+    window.location.replace('/login');
   }
 
   const routes = useMemo(() => [
