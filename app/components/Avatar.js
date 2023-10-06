@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 
 import { useGetUser, useUserHook } from '../hooks/useUser'
@@ -12,26 +12,29 @@ import API from '../API'
 
 
 function Avatar({pk, fromMessage, currentUser}) {
-  const { members } = useActiveMembers();
-  const [isActive, setIsActive] = useState(false)
+  const { members } = useActiveMembers();  
+  const [isActive, setIsActive] = useState(false);
+  const {data: user, isLoading } = useGetUser(pk);
+
+  useEffect(() => {
+    const active = members.indexOf(user?.id) !== -1;
+    setIsActive(active);
+  }, [members]);
+
+  // const isActive = useMemo(() => {
+  //   return members.indexOf(user?.id) !== -1;
+  // }, [members, user])
 
   if(!pk) {
     return (null);
   }
 
-  console.log('pk', pk);
-  const {data: user, isLoading } = useGetUser(pk);
   const avatarCls = fromMessage ? currentUser.id === user?.id ?  'bg-sky-600' : 'bg-rose-600' : 'bg-sky-600';
   const isOwner = fromMessage && user?.id === currentUser?.id;
-  
-  useEffect(() => {
-    const active = members.indexOf(user?.id) !== -1;
-    setIsActive(active);
-  }, [members])
 
   return (
    <>
-    {!isLoading && user && (
+    {!isLoading && (
       <div className="relative flex justify-center gap-2 items-center mb-1">
       {fromMessage && user?.id === currentUser?.id && (
         <div className='flex'>
@@ -49,12 +52,13 @@ function Avatar({pk, fromMessage, currentUser}) {
         md:w-8
       
       ">
-        <div className='flex'>
+        <div className='flex relative'>
           { user?.profile_image && (
             <Image
               fill
               src={user?.profile_image || '/images/placeholder.jpg'}
               alt={user?.email}
+              sizes='h-8, w-8'
             />
           )}
 

@@ -10,8 +10,6 @@ import { useSelector } from 'react-redux';
 import createConversation from '../actions/postConversation';
 import postMessage from '../actions/postMessage';
 
-
-
 import { 
   FieldValues,
   SubmitHandler,
@@ -22,10 +20,15 @@ import {
 import Button from './button';
 import InputWithErrors from './input';
 import { toast } from 'react-hot-toast';
+import Avatar from './Avatar';
+
 
 function AddConvo({onClose}) {
   const [isLoading, setIsLoading] = useState(false)
   const accounts = useSelector((state) => state.accounts);
+  const [selectedUserID, setSelectedUserID] = useState(null);
+
+  
 
   const {
     register,
@@ -44,6 +47,12 @@ function AddConvo({onClose}) {
       message: null,
     }
   })
+
+
+  const handleRemove = () => {
+    setSelectedUserID(null);
+    clearErrors("participants");
+  }
 
   const onSubmit = (values) => {
     setIsLoading(true);
@@ -64,6 +73,7 @@ function AddConvo({onClose}) {
 
 
   const options = _.map(accounts, 'name');
+
   const handleOnSelect = (value) => {
     let val = value;
 
@@ -82,13 +92,17 @@ function AddConvo({onClose}) {
       if(user) {
         clearErrors("participants");
         setValue('participants', [user.id], { shouldValidate: true })
-      }else {
+        setSelectedUserID(user.id);
+      } else {
         setError('participants', { type: 'custom', message: 'Invalid user.' });
         setValue('participants', null, { shouldValidate: false })
+        setSelectedUserID(null);
       }
     }
   }
 
+
+  console.log(selectedUserID, 'selectedse')
   return (
    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-12">
@@ -107,15 +121,27 @@ function AddConvo({onClose}) {
         
         <div className='mt-10 flex flex-col gap-y-8'>
           <label for='contact'>To:
-            <TextInput 
-              className='first-letter:`w-full px-4 border-bottom rounded-md focus:outline-none focus:border-blue-500 shadow-sm transition duration-300 ease-in-out justify-center h-8 py-2'
-              options={options}
-              trigger='' 
-              onSelect={handleOnSelect} 
-              onBlur={handleOnSelect} 
-              name='member-pl'
-              ></TextInput>
+           
+            { selectedUserID ? 
+              <div className='w-1/6 inline-flex ml-2 gap-2 align-middle'>
+                <Avatar pk={selectedUserID}/>
+
+                <button type="button" 
+                  onClick={handleRemove}
+                  class="px-2 text-xs h-4 text-center text-white bg-rose-400 rounded-lg hover:bg-rose-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-rose-500 dark:hover:bg-rose-700 dark:focus:ring-rose-800">clear</button>
+              </div>
+            : 
+                <TextInput 
+                className='w-full px-4 border-bottom rounded-md focus:outline-none focus:border-blue-500 shadow-sm transition duration-300 ease-in-out justify-center h-8 py-2'
+                options={options}
+                trigger='' 
+                onSelect={handleOnSelect} 
+                onBlur={handleOnSelect} 
+                name='member-pl'
+                ></TextInput>
               
+            }
+
             <input type="hidden" {...register("participants",{
               required: 'This field is required.'
             })}/>
@@ -124,7 +150,6 @@ function AddConvo({onClose}) {
             )}
           </label>
 
-      
           <InputWithErrors
             type='text'
             name='message'
