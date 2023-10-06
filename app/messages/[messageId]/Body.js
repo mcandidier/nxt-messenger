@@ -84,6 +84,8 @@ function Body({params, messages, setMessages, loading, currentUser }) {
               nxtElem.isSame = false
             }
           }
+
+          console.log(message, 'message')
   
           return (
             <div key={message.id} className={`flex flex-col mb-2  ${isSender ? 'items-end' : 'items-start'}`}>
@@ -94,9 +96,7 @@ function Body({params, messages, setMessages, loading, currentUser }) {
                     <p className='text-xs text-gray-400'>{format(new Date(message.timestamp), 'p')}</p>
                   </div>
                 )}
-                { message.sender && (
-                  <Avatar pk={message.sender} fromMessage={true} currentUser={currentUser}></Avatar>
-                )}
+                <Avatar pk={message.sender} fromMessage={true} currentUser={currentUser}></Avatar>
                 {!isSender && (
                   <div className='flex'>
                     <p className='text-xs text-gray-400'>{format(new Date(message.timestamp), 'p')}</p>

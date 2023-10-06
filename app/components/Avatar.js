@@ -15,32 +15,28 @@ function Avatar({pk, fromMessage, currentUser}) {
   const { members } = useActiveMembers();  
   const [isActive, setIsActive] = useState(false);
 
-  console.log(pk, 'pk');
+  const [user, setUser] = useState(null);
+  const {data: userData, isLoading } = useGetUser(pk);
 
-  if(pk === undefined) {
-    return (null)
-  }
-  const {data: user, isLoading } = useGetUser(pk);
 
   useEffect(() => {
     const active = members.indexOf(user?.id) !== -1;
     setIsActive(active);
-  }, [members]);
+    if(!userData) return;
+  
+    if(userData.email) {
+      setUser(userData)
+    }
 
-  // const isActive = useMemo(() => {
-  //   return members.indexOf(user?.id) !== -1;
-  // }, [members, user])
-
-  if(!pk) {
-    return (null);
-  }
+    
+  }, [members, userData]);
 
   const avatarCls = fromMessage ? currentUser.id === user?.id ?  'bg-sky-600' : 'bg-rose-600' : 'bg-sky-600';
   const isOwner = fromMessage && user?.id === currentUser?.id;
 
   return (
    <>
-    {!isLoading && (
+    {user && (
       <div className="relative flex justify-center gap-2 items-center mb-1">
       {fromMessage && user?.id === currentUser?.id && (
         <div className='flex'>
@@ -58,20 +54,19 @@ function Avatar({pk, fromMessage, currentUser}) {
         md:w-8
       
       ">
-        <div className='flex relative'>
+ 
           { user?.profile_image && (
             <Image
               fill
               src={user?.profile_image || '/images/placeholder.jpg'}
-              alt={user?.email}
-              sizes='h-8, w-8'
+              alt={user?.name}
+              sizes='32px'
             />
           )}
 
-          { !user?.image && !isLoading && (
+          { !user?.profile_image && (
             <div className={ `flex text-white text-lg h-8 w-8 justify-center items-center ${avatarCls}`}>{user.email[0].toUpperCase()}</div>
           )}
-        </div>
       </div>
       {fromMessage && user?.id !== currentUser?.id && (
         <div className='flex'>

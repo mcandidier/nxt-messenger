@@ -33,20 +33,22 @@ function Convo({params, data, currentUser }) {
         lastMessage = clonedObject;
       }
     })
+    
     if(lastMessage) {
       const url = `conversations/${lastMessage.conversation}/messages/${lastMessage.id}/seen/`;
       if(lastMessage.sender !== currentUser.id ) {
         API.put(url);
       }
     }
-    return () => {
-      setMessages(data);
-    }
+
   }, [
     newMessages,
-    setMessages
+    setMessages,
+    currentUser.id,
+    messages,
+    messageId,
+    data,
   ])
-  /* eslint-disable no-console, no-control-regex*/
 
   return (
     <div className='h-full flex flex-col'>
