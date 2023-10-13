@@ -14,17 +14,21 @@ import { useConversation, useConversationMessages } from '../hooks/useConversati
 import Modal from '../components/modals/Modal'
 import AddConvo from '../components/AddConvo'
 
-// import { setUsers  } from "../redux/accounts";
-// import { useDispatch } from "react-redux";
-  // const dispatch = useDispatch();
-  // dispatch(setUsers(accounts));
+import { setUsers  } from "../redux/accounts";
+import { useDispatch } from "react-redux";
 
 
 function Conversations({conversations, accounts}) {
-
   const currentUser = useSelector((state) => state.user)
   const newMessages = useSelector((state) => state.notifications);
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    dispatch(setUsers(accounts));
+  }, [accounts])
+
 
   const handleOpenConvo = () => {
     setIsOpen(true);

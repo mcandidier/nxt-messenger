@@ -1,7 +1,4 @@
 import API from "../libs/api";
-import { setUsers  } from "../redux/accounts";
-
-import { useDispatch } from "react-redux";
 
 const getAllUsers = async () => {
   try {
