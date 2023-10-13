@@ -30,6 +30,8 @@ const SettingsModal = ({
     handleSubmit,
     setValue,
     watch,
+    getValues,
+    trigger,
     formState: {
       errors,
     }
@@ -57,7 +59,6 @@ const SettingsModal = ({
 
 
   const handleUpload = (result) => {
-    console.log('result.info.secure_url', result.info.secure_url);
     setValue('image', result.info.secure_url, { 
       shouldValidate: true 
     });
@@ -78,10 +79,26 @@ const SettingsModal = ({
     message:"Sorry this CodeSandbox can only handle names with characters"
   }
 
+  const handleOnKeyUp = (event) => {
+
+    if (event.key === 'Enter') {
+      const name = getValues('name');
+      const error = trigger('name').then((res) => {
+          console.log(res)
+          if(res) {
+            updateProfile({name: name});
+          }
+      });
+      event.stopPropagation();
+      event.preventDefault();
+    }
+  }
+
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
      <div>
-     <form onSubmit={handleSubmit(onSubmit)}>
+     <form>
             <div className="space-y-12">
               <div className="border-b border-gray-900/10 pb-12">
                 <h2 
@@ -111,6 +128,7 @@ const SettingsModal = ({
                     })}
                     className={`w-full px-4 py-2  border rounded-md focus:outline-none focus:border-blue-500 shadow-sm transition duration-300 ease-in-out
                     ${errors.name ? 'border-red-500' : ''}`}
+                    onKeyDown={handleOnKeyUp}
                   />
                 
                   { errors?.name && (
@@ -138,18 +156,14 @@ const SettingsModal = ({
                         src={image || currentUser?.image || '/images/placeholder.jpg'}
                         alt="Avatar"
                       />
-                       <CldUploadButton 
-                          options={{ maxFiles: 1 }} 
-                          onUpload={handleUpload} 
-                          uploadPreset="ammv4nmu"
-                        >
-                          <button
-                            type="button"
-                          >
-                            Change
-                          </button>
-                        </CldUploadButton>
-                  </div>
+                      <CldUploadButton 
+                      options={{ maxFiles: 1 }} 
+                      onUpload={handleUpload} 
+                      uploadPreset="ammv4nmu"
+                      >
+                         Change
+                    </CldUploadButton>
+                    </div>
                 </div>
             </div>
             </div>
