@@ -42,12 +42,7 @@ function Convo({params, data, currentUser }) {
     }
 
   }, [
-    newMessages,
-    setMessages,
-    currentUser.id,
-    messages,
-    messageId,
-    data,
+    newMessages
   ])
 
   return (
