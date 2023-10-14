@@ -8,6 +8,9 @@ import API from '../libs/api';
 import { cookies } from 'next/headers'
 import getAllUsers from '../actions/getAllUsers';
 
+import ActiveStatus from '../components/ActiveStatus';
+
+
 export default async function layout({children}) {
   const token = cookies().get('token')?.value
 
@@ -27,6 +30,7 @@ export default async function layout({children}) {
 
   return (
     <Sidebar>
+      <ActiveStatus/>
       <div className="h-full">
         <Conversations conversations={data} accounts={accounts}/>
         <main className="h-full">

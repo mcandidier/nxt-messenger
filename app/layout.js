@@ -4,7 +4,6 @@ import './globals.css'
 
 import Providers from './redux/provider';
 import { Toaster } from 'react-hot-toast';
-import ActiveStatus from './components/ActiveStatus';
 
 export default async function RootLayout({
   children,
@@ -18,7 +17,6 @@ export default async function RootLayout({
       <body>
       <Providers>
           <Toaster/>
-          <ActiveStatus/>
             {children}
         </Providers>
       </body>
