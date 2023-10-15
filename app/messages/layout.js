@@ -18,14 +18,6 @@ export default async function layout({children}) {
     return (null);
   }
 
-  const getChat = async () => {
-    const resp = await API.get('conversations/');
-    return {
-      data: await resp.data
-    }
-  }
-  
-  const { data:conversations } = await getChat();
   const {data:accounts} = await getAllUsers();
 
   return (

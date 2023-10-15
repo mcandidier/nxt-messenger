@@ -18,21 +18,27 @@ import { setUsers  } from "../redux/accounts";
 import { setConversations } from '../redux/conversations'
 import { useDispatch } from "react-redux";
 
+import API from '../API'
 
-function Conversations({conversations, accounts}) {
+function Conversations({accounts}) {
   const currentUser = useSelector((state) => state.user)
   const newMessages = useSelector((state) => state.notifications);
 
-
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
-  const chats = useSelector(state => state.conversations);
+  dispatch(setUsers(accounts));
 
   useEffect(() => {
-    dispatch(setUsers(accounts));
-    dispatch(setConversations(conversations));
-  }, [accounts]);
+    const getChat = async () => {
+      const resp = await API.get('conversations/');
+      const data = await resp.data;
+      dispatch(setConversations(data));
+    }
 
+    getChat();
+  }, []);
+
+  const chats = useSelector(state => state.conversations);
 
   const handleOpenConvo = () => {
     setIsOpen(true);

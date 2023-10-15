@@ -12,6 +12,7 @@ function Pusher() {
   const user = useSelector((state) => state.user);
   const [channel, setChannel] = useState(null);
 
+  console.log('pusher')
   useEffect(() => {
 
     if(!channel && user) {
@@ -31,7 +32,8 @@ function Pusher() {
     
       const channelName = `private-${user.id}-conversations`;
       const privateChannel = pusherSever.subscribe(channelName);
-  
+      setChannel(privateChannel);
+
       privateChannel.bind("pusher:subscription_succeeded", () => {
         console.log('connected to private', channelName);
       })
@@ -46,10 +48,10 @@ function Pusher() {
   
       privateChannel.bind('new-channel', function(data) {
         const conversation_id = data.conversation_id;
+        console.log('new channel', data)
         dispatch(updateConversations(data));
       });
   
-      setChannel(privateChannel);
     }
   
     return () => {
@@ -58,7 +60,7 @@ function Pusher() {
         setChannel(null);
       }
     }
-  },[channel, user, dispatch]);
+  },[channel, user]);
   
 
 }
