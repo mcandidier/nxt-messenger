@@ -26,6 +26,9 @@ function Message ({message, currentUser}) {
   const { conversationId, isSelected } = useConversation(message.id);
   // const { data: latest, mutate: mutatedLastMessage } = useLatestMessage(message.id);
   const handleClick = (e) => {
+    if(message.hasNew) {
+      message.hasNew = false;
+    }
     router.push(`/messages/${message.id}`);
   }
   const receiverId = _.find(message.participants, participant => participant !== message.owner);
