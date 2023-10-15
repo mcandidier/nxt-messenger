@@ -25,14 +25,14 @@ export default async function layout({children}) {
     }
   }
   
-  const { data } = await getChat();
+  const { data:conversations } = await getChat();
   const {data:accounts} = await getAllUsers();
 
   return (
     <Sidebar>
       <ActiveStatus/>
       <div className="h-full">
-        <Conversations conversations={data} accounts={accounts}/>
+        <Conversations conversations={conversations} accounts={accounts}/>
         <main className="h-full">
         {children}
         </main>

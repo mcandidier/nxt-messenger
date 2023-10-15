@@ -85,10 +85,8 @@ function Body({params, messages, setMessages, loading, currentUser }) {
             }
           }
 
-          console.log(message, 'message')
-  
           return (
-            <div key={message.id} className={`flex flex-col mb-2  ${isSender ? 'items-end' : 'items-start'}`}>
+            <div key={message.timestamp} className={`flex flex-col mb-2  ${isSender ? 'items-end' : 'items-start'}`}>
               { !message?.isSame && (
                 <div className='flex gap-2 items-center rounded-sm duration-300 opacity-100 scale-100 transform'>
                 {isSender && (

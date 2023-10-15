@@ -29,20 +29,23 @@ function Convo({params, data, currentUser }) {
     newMessages.filter(msg => {
       if(msg.conversation === Number(messageId)) {
         const clonedObject = { ...msg, isSame: true };
-        setMessages([...messages, clonedObject]);
+        if(messages.length > 1 ) {
+          setMessages([...messages, clonedObject]);
+        }
         lastMessage = clonedObject;
       }
-    })
-    
+    });
+  
+
     if(lastMessage) {
       const url = `conversations/${lastMessage.conversation}/messages/${lastMessage.id}/seen/`;
       if(lastMessage.sender !== currentUser.id ) {
         API.put(url);
       }
     }
-
+  
   }, [
-    newMessages
+    newMessages,
   ])
 
   return (

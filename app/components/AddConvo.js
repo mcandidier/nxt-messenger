@@ -4,8 +4,10 @@ import React, { useState } from 'react';
 import TextInput from 'react-autocomplete-input';
 import 'react-autocomplete-input/dist/bundle.css';
 
-import {constant, isObject, map} from 'lodash';
-import { useSelector } from 'react-redux';
+import {constant, isObject, map, update} from 'lodash';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateConversations } from '../redux/conversations'
+
 
 import createConversation from '../actions/postConversation';
 import postMessage from '../actions/postMessage';
@@ -27,8 +29,9 @@ function AddConvo({onClose}) {
   const [isLoading, setIsLoading] = useState(false)
   const accounts = useSelector((state) => state.accounts);
   const [selectedUserID, setSelectedUserID] = useState(null);
+  const dispatch = useDispatch();
 
-  
+
 
   const {
     register,
@@ -58,6 +61,7 @@ function AddConvo({onClose}) {
     setIsLoading(true);
     createConversation(values).then((resp) => {
       const {id:conversation_id} = resp.data;
+      dispatch(updateConversations(resp.data));
       postMessage(conversation_id, {content: values.message}).then((resp) => {
         onClose();
       }).catch(err => {

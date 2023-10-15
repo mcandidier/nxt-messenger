@@ -15,19 +15,23 @@ import Modal from '../components/modals/Modal'
 import AddConvo from '../components/AddConvo'
 
 import { setUsers  } from "../redux/accounts";
+import { setConversations } from '../redux/conversations'
 import { useDispatch } from "react-redux";
 
 
 function Conversations({conversations, accounts}) {
   const currentUser = useSelector((state) => state.user)
   const newMessages = useSelector((state) => state.notifications);
+
+
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
-
+  const chats = useSelector(state => state.conversations);
 
   useEffect(() => {
     dispatch(setUsers(accounts));
-  }, [accounts])
+    dispatch(setConversations(conversations));
+  }, [accounts]);
 
 
   const handleOpenConvo = () => {
@@ -37,7 +41,6 @@ function Conversations({conversations, accounts}) {
   const onClose = () => {
     setIsOpen(false);
   }
-
 
   return (
     <div className='
@@ -79,7 +82,7 @@ function Conversations({conversations, accounts}) {
           </div>
 
           {currentUser && (
-             conversations?.map((message) => {
+             chats.map((message) => {
               Object.preventExtensions(message);
               let msgObj = { ...message, hasNew: false };
 
