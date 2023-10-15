@@ -24,7 +24,7 @@ export default async function layout({children}) {
     <Sidebar>
       <ActiveStatus/>
       <div className="h-full">
-        <Conversations conversations={conversations} accounts={accounts}/>
+        <Conversations accounts={accounts}/>
         <main className="h-full">
         {children}
         </main>
